@@ -1,3 +1,5 @@
+import { createIteratorReturn, createIteratorYield } from '../helpers';
+
 function arrayToReversed<T>(array: Array<T>): IterableIterator<T> {
   let index = array.length - 1;
 
@@ -7,17 +9,15 @@ function arrayToReversed<T>(array: Array<T>): IterableIterator<T> {
     },
     next() {
       if (index < 0) {
-        return { done: true, value: undefined };
+        return createIteratorReturn();
       }
 
-      return { done: false, value: array[index--] };
+      return createIteratorYield(array[index--]);
     },
   };
 }
 
 export function reverse<T>(iterable: Iterable<T>): IterableIterator<T> {
-  console.log(iterable);
-
   if (Array.isArray(iterable)) {
     return arrayToReversed(iterable);
   }
@@ -34,10 +34,10 @@ export function reverse<T>(iterable: Iterable<T>): IterableIterator<T> {
     },
     next() {
       if (stack.length) {
-        return { done: false, value: stack.pop()! };
+        return createIteratorYield(stack.pop()!);
       }
 
-      return { done: true, value: undefined };
+      return createIteratorReturn();
     },
   };
 }

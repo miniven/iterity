@@ -1,4 +1,4 @@
-import { getIterableIterator, isIterable, toIterableValue } from '../helpers';
+import { getIterableIterator, isIterable, toIterableValue } from '../../helpers';
 
 import type { TOperation } from '../types';
 
@@ -8,11 +8,18 @@ import type { TOperation } from '../types';
  * @class CoreCollection<T>
  */
 export abstract class CoreCollection<T> implements Iterable<T> {
+  /**
+   * Приводит переданное значение к итерируемому типу, если оно таким не является изначально
+   *
+   * @param value Любое значение, которое будет приведено к итерируемому, если таким не является
+   * @returns {Iterable} Итератор
+   */
   protected static makeIterable<T>(value: T | Iterable<T>): Iterable<T> {
     return isIterable(value) ? value : toIterableValue(value);
   }
+
   /**
-   * Перебираемая коллекция
+   * Значение, хранящееся в контейнере
    */
   protected _value: T | Iterable<T>;
 
@@ -35,23 +42,27 @@ export abstract class CoreCollection<T> implements Iterable<T> {
    * Метод для изменения типа контейнера. Изначально значение хранится в контейнере IterableContainer<T>, но этот метод
    * позволяет изменить тип контейнера, например, на Resumable<T>, или на обыкновенный массив
    *
+   * @description Метод возвращает контейнерный тип: либо тот же, либо новый. Это способ передать значнеие от одного контейнера к другому.
+   *
    * @param {Function} transformer Функция для возврата нового контейнера.
-   * @returns {Iterable} Новый контейнер, хранящий значение
+   * @returns {CoreCollection} Новый контейнер, хранящий значение
    */
-  abstract transform<R>(
-    transformer: (value: T | Iterable<T>) => R | Iterable<R> | CoreCollection<R>
-  ): CoreCollection<R>;
+  abstract transform(transformer: (value: T | Iterable<T>) => T | Iterable<T> | CoreCollection<T>): CoreCollection<T>;
 
   /**
    * Метод для передачи функций, которые преобразовывают значения коллекции, или меняют поведение при итерации
    *
+   * @description Метод возвращает тот же контейнерный тип, но с новым значением. Это способ изменить значение в контейнере.
+   *
    * @param {Function} operations Функции для преобразования коллекции
-   * @returns {Resumable} Контейнер, содержащий преобразованную коллекцию
+   * @returns {CoreCollection} Контейнер, содержащий преобразованную коллекцию
    */
   abstract pipe(...operations: Array<TOperation<any, any>>): CoreCollection<any>;
 
   /**
    * Функция для преобразования коллекции к конечному значению и возврата этого значения
+   *
+   * @description Метод возвращает значение, каким оно было возвращено из функции. Это способ привести контейнерный тип к произвольному типу.
    *
    * @param {Function} collector Функция-коллектор для преобразования коллекции к одному значению
    * @returns Конечное значение
@@ -61,9 +72,9 @@ export abstract class CoreCollection<T> implements Iterable<T> {
   }
 
   [Symbol.iterator](): IterableIterator<T> {
-    const modifier = this._getContainerTypeModifier();
+    const toCollectionTypeIterator = this._getContainerTypeModifier();
     const iterator = getIterableIterator(CoreCollection.makeIterable(this._value));
 
-    return modifier(iterator);
+    return toCollectionTypeIterator(iterator);
   }
 }

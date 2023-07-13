@@ -1,3 +1,19 @@
+export { toResumable, toDisposable, toSameContainer, toIterableValue } from './transformers';
+
+export function isIterable<T>(value: any): value is Iterable<T> {
+  return typeof value[Symbol.iterator] === 'function';
+}
+
+export const createIteratorYield = <T>(value: T): IteratorYieldResult<T> => ({
+  done: false,
+  value,
+});
+
+export const createIteratorReturn = (): IteratorReturnResult<undefined> => ({
+  done: true,
+  value: undefined,
+});
+
 export function getIterator<T>(value: Iterable<T>): Iterator<T> {
   return value[Symbol.iterator]();
 }

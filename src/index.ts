@@ -17,8 +17,8 @@ const randomIterator = new Disposable([1, 2, 3, 4])
     map((value) => String(value)),
     tap((value) => console.log('after reverse', value))
   )
-  .collect(reduce((acc, value) => acc.concat(value), [] as Array<string>));
+  .collect(reduce((acc, value) => `${acc}_${value}`));
 
 if (randomIterator) {
-  console.log([...randomIterator]);
+  console.log(randomIterator);
 }

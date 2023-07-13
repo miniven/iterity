@@ -1,4 +1,4 @@
-import { getIterator } from '../core/helpers';
+import { createIteratorReturn, getIterator } from '../helpers';
 
 // @TODO Добавить поддержку отрицательного лимита, чтобы брать не первые, а последние N значений
 export function take<T>(limit: number) {
@@ -15,10 +15,7 @@ export function take<T>(limit: number) {
         limit--;
 
         if (next.done || limit < 0) {
-          return {
-            value: undefined,
-            done: true,
-          };
+          return createIteratorReturn();
         }
 
         return next;

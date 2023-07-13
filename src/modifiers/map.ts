@@ -1,4 +1,4 @@
-import { getIterator } from '../core/helpers';
+import { createIteratorYield, getIterator } from '../helpers';
 
 /**
  * Функция для преобразования значений исходного итератора в другие значения
@@ -18,10 +18,10 @@ export function map<T, R>(mapper: (value: T) => R): (iterable: Iterable<T>) => I
         const next = iterator.next();
 
         if (next.done) {
-          return { done: true, value: undefined };
+          return next;
         }
 
-        return { done: false, value: mapper(next.value) };
+        return createIteratorYield(mapper(next.value));
       },
     };
   };

@@ -1,4 +1,4 @@
-import { getIterator } from '../core/helpers';
+import { getIterator } from '../helpers';
 
 export function tap<T>(effect: (value: T) => void) {
   return (iterable: Iterable<T>): IterableIterator<T> => {

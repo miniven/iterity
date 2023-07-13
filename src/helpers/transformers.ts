@@ -1,5 +1,6 @@
-import { Disposable } from '../containers/Disposable';
-import { Resumable } from '../containers/Resumable';
+import { createIteratorReturn, createIteratorYield } from '.';
+import { Disposable } from '../core/containers/Disposable';
+import { Resumable } from '../core/containers/Resumable';
 
 const enum State {
   IDLE = 'IDLE',
@@ -15,12 +16,12 @@ export function toIterableValue<T>(value: T): IterableIterator<T> {
     },
     next() {
       if (state === State.DONE) {
-        return { done: true, value: undefined };
+        return createIteratorReturn();
       }
 
       state = State.DONE;
 
-      return { done: false, value };
+      return createIteratorYield(value);
     },
   };
 }

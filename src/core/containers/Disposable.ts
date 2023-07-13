@@ -19,7 +19,7 @@ export class Disposable<T> extends CoreCollection<T> {
     return new Disposable(operations.reduce((value, func) => func(value), CoreCollection.makeIterable(this._value)));
   };
 
-  transform<R>(transformer: (value: T | Iterable<T>) => R | Iterable<R> | CoreCollection<R>): CoreCollection<R> {
+  transform(transformer: (value: T | Iterable<T>) => T | Iterable<T> | CoreCollection<T>): CoreCollection<T> {
     const nextValue = transformer(this._value);
 
     if (nextValue instanceof CoreCollection) {

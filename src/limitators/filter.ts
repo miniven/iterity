@@ -1,4 +1,4 @@
-import { getIterator } from '../core/helpers';
+import { getIterator } from '../helpers';
 
 export function filter<T>(predicate: (value: T) => boolean) {
   return function (iterable: Iterable<T>): IterableIterator<T> {

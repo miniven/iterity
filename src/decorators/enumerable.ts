@@ -1,4 +1,4 @@
-import { getIterator } from '../core/helpers';
+import { createIteratorReturn, createIteratorYield, getIterator } from '../helpers';
 
 const enum State {
   IDLE = 'IDLE',
@@ -19,16 +19,10 @@ export function enumerable<T>(iterable: Iterable<T>): IterableIterator<[number, 
       const { value, done } = iterator.next();
 
       if (done || state === State.DONE) {
-        return {
-          value: undefined,
-          done: true,
-        };
+        return createIteratorReturn();
       }
 
-      return {
-        value: [index++, value],
-        done: false,
-      };
+      return createIteratorYield<[number, T]>([index++, value]);
     },
   };
 }

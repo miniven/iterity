@@ -1,4 +1,4 @@
-import { getIterator } from '../core/helpers';
+import { createIteratorReturn, getIterator } from '../helpers';
 
 function sequence<T>(...iterables: Array<Iterable<T>>): IterableIterator<T> {
   const iterablesIterator = getIterator(iterables);
@@ -22,7 +22,7 @@ function sequence<T>(...iterables: Array<Iterable<T>>): IterableIterator<T> {
          * Если следующего нет, считаем, что закончили
          */
         if (nextIterator.done) {
-          return { done: true, value: undefined };
+          return createIteratorReturn();
         }
 
         /**
