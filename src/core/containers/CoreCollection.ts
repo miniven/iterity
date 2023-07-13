@@ -8,19 +8,20 @@ import type { TOperation } from '../types';
  * @class CoreCollection<T>
  */
 export abstract class CoreCollection<T> implements Iterable<T> {
+  protected static makeIterable<T>(value: T | Iterable<T>): Iterable<T> {
+    return isIterable(value) ? value : toIterableValue(value);
+  }
   /**
    * Перебираемая коллекция
    */
-  protected _value: Iterable<T>;
+  protected _value: T | Iterable<T>;
 
   /**
    * @constructor
    * @param {Iterable} value Значение, которое будет помещено в контейнер. Не перебираемое значение преобразуется к перебираемому.
    */
   constructor(value: T | Iterable<T>) {
-    const transformer = this._getTransformer();
-
-    this._value = transformer(isIterable(value) ? value : toIterableValue(value));
+    this._value = value;
   }
 
   /**
@@ -28,7 +29,7 @@ export abstract class CoreCollection<T> implements Iterable<T> {
    *
    * @returns {Function} Функция преобразования перебираемой коллекции
    */
-  protected abstract _getTransformer(): (iterable: Iterable<T>) => Iterable<T>;
+  protected abstract _getTransformer(): (iterable: Iterable<T>) => IterableIterator<T>;
 
   /**
    * Метод для изменения типа контейнера. Изначально значение хранится в контейнере IterableContainer<T>, но этот метод
@@ -48,16 +49,33 @@ export abstract class CoreCollection<T> implements Iterable<T> {
   abstract pipe(...operations: Array<TOperation<any, any>>): CoreCollection<any>;
 
   /**
+   * Метод для эффективного разворачивания перебираемого объекта в обратном порядке
+   */
+  abstract reverse(): CoreCollection<T>;
+
+  /**
    * Функция для преобразования коллекции к конечному значению и возврата этого значения
    *
    * @param {Function} collector Функция-коллектор для преобразования коллекции к одному значению
    * @returns Конечное значение
    */
   collect<R>(collector: (iterable: Iterable<T>) => R): R {
-    return collector(this._value);
+    return collector(this);
   }
 
   [Symbol.iterator]() {
-    return getIterator(this._value);
+    const transformer = this._getTransformer();
+    const value = CoreCollection.makeIterable(this._value);
+    const iterator = getIterator(value);
+
+    return transformer({
+      [Symbol.iterator]() {
+        return {
+          next() {
+            return iterator.next();
+          },
+        };
+      },
+    });
   }
 }
