@@ -1,7 +1,3 @@
-export function isIterable<T>(value: any): value is Iterable<T> {
-  return typeof value[Symbol.iterator] === 'function';
-}
-
 export function getIterator<T>(value: Iterable<T>): Iterator<T> {
   return value[Symbol.iterator]();
 }

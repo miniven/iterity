@@ -1,19 +1,7 @@
-import { average } from './collectors/average';
-import { count } from './collectors/count';
-import { sum } from './collectors/sum';
-import { append } from './combiners/seq';
-import { Disposable, Resumable, toDisposable, toResumable } from './core';
-import { enumerable } from './decorators/enumerable';
+import { Disposable } from './core';
 import { tap } from './decorators/tap';
-import { filter } from './limitators/filter';
 import { take } from './limitators/take';
 import { map } from './modifiers/map';
-import { toSet } from './collectors/toSet';
-import { max } from './collectors/max';
-import { min } from './collectors/min';
-import { join } from './collectors/join';
-import { first } from './collectors/first';
-import { last } from './collectors/last';
 import { reduce } from './collectors/reduce';
 
 function* randomGenerator(min = 0, max = 1) {
@@ -29,6 +17,6 @@ const randomIterator = new Disposable(random)
     map((value) => String(value)),
     tap((value) => console.log('number', value))
   )
-  .collect(reduce((acc, value) => acc + value));
+  .collect(reduce((acc, value) => acc + Number(value), 0));
 
 console.log(randomIterator);

@@ -1,0 +1,12 @@
+export { average } from './average';
+export { count } from './count';
+export { first } from './first';
+export { last } from './last';
+export { join } from './join';
+export { max } from './max';
+export { min } from './min';
+export { product } from './product';
+export { sum } from './sum';
+export { reduce } from './reduce';
+export { toArray } from './toArray';
+export { toSet } from './toSet';
