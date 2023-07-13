@@ -1,5 +1,6 @@
 import { resumable } from '../../decorators/resumable';
 import { CoreCollection } from './CoreCollection';
+import { reverse } from '../../modifiers/reverse';
 
 import type { TOperation, TPipeMethod } from '../types';
 
@@ -10,21 +11,25 @@ import type { TOperation, TPipeMethod } from '../types';
  * @class Resumable<T>
  */
 export class Resumable<T> extends CoreCollection<T> {
-  protected _getTransformer(): (iterable: Iterable<T>) => Iterable<T> {
+  protected _getTransformer(): (iterable: Iterable<T>) => IterableIterator<T> {
     return resumable;
   }
 
   pipe: TPipeMethod<T> = (...operations: Array<TOperation<any, any>>): Resumable<any> => {
-    return new Resumable(operations.reduce((value, func) => func(value), this._value));
+    return new Resumable(this._value, [...this._operations, ...operations]);
   };
 
-  transform<R>(transformer: (value: Iterable<T>) => R | Iterable<R> | CoreCollection<R>): CoreCollection<R> {
+  reverse(): Resumable<T> {
+    return new Resumable(reverse(CoreCollection.makeIterable(this._value)), this._operations);
+  }
+
+  transform<R>(transformer: (value: T | Iterable<T>) => R | Iterable<R> | CoreCollection<R>): CoreCollection<R> {
     const nextValue = transformer(this._value);
 
     if (nextValue instanceof CoreCollection) {
       return nextValue;
     }
 
-    return new Resumable(nextValue);
+    return new Resumable(nextValue, this._operations);
   }
 }

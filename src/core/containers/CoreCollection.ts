@@ -1,3 +1,4 @@
+import { reverse } from '../../modifiers/reverse';
 import { getIterator, isIterable, toIterableValue } from '../helpers';
 
 import type { TOperation } from '../types';
@@ -8,19 +9,30 @@ import type { TOperation } from '../types';
  * @class CoreCollection<T>
  */
 export abstract class CoreCollection<T> implements Iterable<T> {
+  protected static makeIterable<T>(value: T | Iterable<T>) {
+    return isIterable(value) ? value : toIterableValue(value);
+  }
+
   /**
    * Перебираемая коллекция
    */
-  protected _value: Iterable<T>;
+  protected _value: T | Iterable<T>;
+
+  /**
+   * Массив итераторов, которые будут применены к значению в момент итерации
+   */
+  protected _operations: Array<TOperation<any, any>> = [];
 
   /**
    * @constructor
    * @param {Iterable} value Значение, которое будет помещено в контейнер. Не перебираемое значение преобразуется к перебираемому.
    */
-  constructor(value: T | Iterable<T>) {
-    const transformer = this._getTransformer();
+  constructor(value: T | Iterable<T>, operations?: Array<TOperation<any, any>>) {
+    this._value = value;
 
-    this._value = transformer(isIterable(value) ? value : toIterableValue(value));
+    if (operations) {
+      this._operations = operations;
+    }
   }
 
   /**
@@ -28,7 +40,7 @@ export abstract class CoreCollection<T> implements Iterable<T> {
    *
    * @returns {Function} Функция преобразования перебираемой коллекции
    */
-  protected abstract _getTransformer(): (iterable: Iterable<T>) => Iterable<T>;
+  protected abstract _getTransformer(): (iterable: Iterable<T>) => IterableIterator<T>;
 
   /**
    * Метод для изменения типа контейнера. Изначально значение хранится в контейнере IterableContainer<T>, но этот метод
@@ -37,7 +49,9 @@ export abstract class CoreCollection<T> implements Iterable<T> {
    * @param {Function} transformer Функция для возврата нового контейнера.
    * @returns {Iterable} Новый контейнер, хранящий значение
    */
-  abstract transform<R>(transformer: (value: Iterable<T>) => R | Iterable<R> | CoreCollection<R>): CoreCollection<R>;
+  abstract transform<R>(
+    transformer: (value: T | Iterable<T>) => R | Iterable<R> | CoreCollection<R>
+  ): CoreCollection<R>;
 
   /**
    * Метод для передачи функций, которые преобразовывают значения коллекции, или меняют поведение при итерации
@@ -48,16 +62,34 @@ export abstract class CoreCollection<T> implements Iterable<T> {
   abstract pipe(...operations: Array<TOperation<any, any>>): CoreCollection<any>;
 
   /**
+   * Метод для эффективного разворачивания перебираемого объекта в обратном порядке
+   */
+  abstract reverse(): CoreCollection<T>;
+
+  /**
    * Функция для преобразования коллекции к конечному значению и возврата этого значения
    *
    * @param {Function} collector Функция-коллектор для преобразования коллекции к одному значению
    * @returns Конечное значение
    */
   collect<R>(collector: (iterable: Iterable<T>) => R): R {
-    return collector(this._value);
+    return collector(this);
   }
 
   [Symbol.iterator]() {
-    return getIterator(this._value);
+    const transformer = this._getTransformer();
+    const value = CoreCollection.makeIterable(this._value);
+    const pipedValue = this._operations.reduce((value, func) => func(value), value);
+    const valueIterator = getIterator(pipedValue);
+
+    return transformer({
+      [Symbol.iterator]() {
+        return {
+          next() {
+            return valueIterator.next();
+          },
+        };
+      },
+    });
   }
 }

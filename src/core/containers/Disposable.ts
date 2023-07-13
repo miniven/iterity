@@ -2,6 +2,7 @@ import { breakable } from '../../decorators/breakable';
 import { CoreCollection } from './CoreCollection';
 
 import type { TPipeMethod, TOperation } from '../types';
+import { reverse } from '../../modifiers/reverse';
 
 /**
  * Контейнер для значения, с которым необходимо работать как с перебираемой коллекцией.
@@ -10,21 +11,25 @@ import type { TPipeMethod, TOperation } from '../types';
  * @class Disposable<T>
  */
 export class Disposable<T> extends CoreCollection<T> {
-  protected _getTransformer(): (iterable: Iterable<T>) => Iterable<T> {
+  protected _getTransformer(): (iterable: Iterable<T>) => IterableIterator<T> {
     return breakable;
   }
 
   pipe: TPipeMethod<T> = (...operations: Array<TOperation<any, any>>): Disposable<any> => {
-    return new Disposable(operations.reduce((value, func) => func(value), this._value));
+    return new Disposable(this._value, [...this._operations, ...operations]);
   };
 
-  transform<R>(transformer: (value: Iterable<T>) => R | Iterable<R> | CoreCollection<R>): CoreCollection<R> {
+  reverse(): Disposable<T> {
+    return new Disposable(reverse(CoreCollection.makeIterable(this._value)), this._operations);
+  }
+
+  transform<R>(transformer: (value: T | Iterable<T>) => R | Iterable<R> | CoreCollection<R>): CoreCollection<R> {
     const nextValue = transformer(this._value);
 
     if (nextValue instanceof CoreCollection) {
       return nextValue;
     }
 
-    return new Disposable(nextValue);
+    return new Disposable(nextValue, this._operations);
   }
 }

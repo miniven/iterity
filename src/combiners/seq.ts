@@ -1,6 +1,12 @@
 import { getIterator } from '../core/helpers';
 
-function sequence<T>(...iterables: Array<Iterable<T>>): IterableIterator<T> {
+/**
+ * Получает коллекции и возвращает одну, которая будет итерировать по элементам всех коллекций
+ *
+ * @param iterables Перебираемые коллекции в качестве аргументов функции
+ * @returns Перебираемая коллекция всех элементов всех переданных коллекции
+ */
+export function seq<T>(...iterables: Array<Iterable<T>>): IterableIterator<T> {
   const iterablesIterator = getIterator(iterables);
 
   let currentIterator = iterablesIterator.next().value[Symbol.iterator]();
@@ -38,17 +44,5 @@ function sequence<T>(...iterables: Array<Iterable<T>>): IterableIterator<T> {
        */
       return next;
     },
-  };
-}
-
-export function prepend<T, R>(...iterables: Array<Iterable<R>>) {
-  return function (iterable: Iterable<T>): IterableIterator<T | R> {
-    return sequence<T | R>(...iterables, iterable);
-  };
-}
-
-export function append<T, R>(...iterables: Array<Iterable<R>>) {
-  return function (iterable: Iterable<T>): IterableIterator<T | R> {
-    return sequence<T | R>(iterable, ...iterables);
   };
 }
