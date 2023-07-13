@@ -51,12 +51,6 @@ export abstract class CoreCollection<T> implements Iterable<T> {
   abstract pipe(...operations: Array<TOperation<any, any>>): CoreCollection<any>;
 
   /**
-   * Метод для эффективного разворачивания перебираемого объекта в обратном порядке.
-   * Если в контейнере хранится массив, то итерация в обратном порядке будет оптимизирована через доступ по индексу.
-   */
-  abstract reverse(): CoreCollection<T>;
-
-  /**
    * Функция для преобразования коллекции к конечному значению и возврата этого значения
    *
    * @param {Function} collector Функция-коллектор для преобразования коллекции к одному значению

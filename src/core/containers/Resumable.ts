@@ -19,10 +19,6 @@ export class Resumable<T> extends CoreCollection<T> {
     return new Resumable(operations.reduce((value, func) => func(value), CoreCollection.makeIterable(this._value)));
   };
 
-  reverse(): Resumable<T> {
-    return new Resumable(reverse(CoreCollection.makeIterable(this._value)));
-  }
-
   transform<R>(transformer: (value: T | Iterable<T>) => R | Iterable<R> | CoreCollection<R>): CoreCollection<R> {
     const nextValue = transformer(this._value);
 
