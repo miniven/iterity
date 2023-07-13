@@ -16,6 +16,8 @@ function arrayToReversed<T>(array: Array<T>): IterableIterator<T> {
 }
 
 export function reverse<T>(iterable: Iterable<T>): IterableIterator<T> {
+  console.log(iterable);
+
   if (Array.isArray(iterable)) {
     return arrayToReversed(iterable);
   }

@@ -1,4 +1,4 @@
-import { getIterator, isIterable, toIterableValue } from '../helpers';
+import { getIterableIterator, isIterable, toIterableValue } from '../helpers';
 
 import type { TOperation } from '../types';
 
@@ -29,7 +29,7 @@ export abstract class CoreCollection<T> implements Iterable<T> {
    *
    * @returns {Function} Функция преобразования перебираемой коллекции
    */
-  protected abstract _getTransformer(): (iterable: Iterable<T>) => IterableIterator<T>;
+  protected abstract _getContainerTypeModifier(): (iterable: Iterable<T>) => IterableIterator<T>;
 
   /**
    * Метод для изменения типа контейнера. Изначально значение хранится в контейнере IterableContainer<T>, но этот метод
@@ -38,7 +38,9 @@ export abstract class CoreCollection<T> implements Iterable<T> {
    * @param {Function} transformer Функция для возврата нового контейнера.
    * @returns {Iterable} Новый контейнер, хранящий значение
    */
-  abstract transform<R>(transformer: (value: Iterable<T>) => R | Iterable<R> | CoreCollection<R>): CoreCollection<R>;
+  abstract transform<R>(
+    transformer: (value: T | Iterable<T>) => R | Iterable<R> | CoreCollection<R>
+  ): CoreCollection<R>;
 
   /**
    * Метод для передачи функций, которые преобразовывают значения коллекции, или меняют поведение при итерации
@@ -49,7 +51,8 @@ export abstract class CoreCollection<T> implements Iterable<T> {
   abstract pipe(...operations: Array<TOperation<any, any>>): CoreCollection<any>;
 
   /**
-   * Метод для эффективного разворачивания перебираемого объекта в обратном порядке
+   * Метод для эффективного разворачивания перебираемого объекта в обратном порядке.
+   * Если в контейнере хранится массив, то итерация в обратном порядке будет оптимизирована через доступ по индексу.
    */
   abstract reverse(): CoreCollection<T>;
 
@@ -63,19 +66,10 @@ export abstract class CoreCollection<T> implements Iterable<T> {
     return collector(this);
   }
 
-  [Symbol.iterator]() {
-    const transformer = this._getTransformer();
-    const value = CoreCollection.makeIterable(this._value);
-    const iterator = getIterator(value);
+  [Symbol.iterator](): IterableIterator<T> {
+    const modifier = this._getContainerTypeModifier();
+    const iterator = getIterableIterator(CoreCollection.makeIterable(this._value));
 
-    return transformer({
-      [Symbol.iterator]() {
-        return {
-          next() {
-            return iterator.next();
-          },
-        };
-      },
-    });
+    return modifier(iterator);
   }
 }

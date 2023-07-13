@@ -12,11 +12,10 @@ function* randomGenerator(min = 0, max = 1) {
 
 const random = randomGenerator(5, 10);
 const randomIterator = new Disposable([1, 2, 3, 4])
-  .reverse()
   .pipe(
     take(8),
     map((value) => String(value)),
-    tap((value) => console.log('number', value))
+    tap((value) => console.log('after reverse', value))
   )
   .collect(reduce((acc, value) => acc.concat(value), [] as Array<string>));
 

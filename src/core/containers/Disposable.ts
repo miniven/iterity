@@ -11,7 +11,7 @@ import type { TPipeMethod, TOperation } from '../types';
  * @class Disposable<T>
  */
 export class Disposable<T> extends CoreCollection<T> {
-  protected _getTransformer(): (iterable: Iterable<T>) => IterableIterator<T> {
+  protected _getContainerTypeModifier(): (iterable: Iterable<T>) => IterableIterator<T> {
     return breakable;
   }
 
@@ -23,8 +23,8 @@ export class Disposable<T> extends CoreCollection<T> {
     return new Disposable(reverse(CoreCollection.makeIterable(this._value)));
   }
 
-  transform<R>(transformer: (value: Iterable<T>) => R | Iterable<R> | CoreCollection<R>): CoreCollection<R> {
-    const nextValue = transformer(CoreCollection.makeIterable(this._value));
+  transform<R>(transformer: (value: T | Iterable<T>) => R | Iterable<R> | CoreCollection<R>): CoreCollection<R> {
+    const nextValue = transformer(this._value);
 
     if (nextValue instanceof CoreCollection) {
       return nextValue;
