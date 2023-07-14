@@ -1,4 +1,4 @@
-export { toResumable, toDisposable, toSameContainer, toIterableValue } from './transformers';
+export { toSameContainer, toIterableValue, toCollection, toAsyncCollection } from './transformers';
 
 export function isIterable<T>(value: any): value is Iterable<T> {
   return typeof value[Symbol.iterator] === 'function';
@@ -6,6 +6,10 @@ export function isIterable<T>(value: any): value is Iterable<T> {
 
 export function isAsyncIterable<T>(value: any): value is AsyncIterable<T> {
   return typeof value[Symbol.asyncIterator] === 'function';
+}
+
+export function isCollectionInstance<R>(value: any): value is R {
+  return typeof value === 'object' && 'pipe' in value && 'transform' in value && 'collect' in value;
 }
 
 export const createIteratorYield = <T>(value: T): IteratorYieldResult<T> => ({
@@ -45,6 +49,24 @@ export function getAsyncIterableIterator<T>(value: AsyncIterable<T>): AsyncItera
     next() {
       return iterator.next();
     },
+  };
+}
+
+export function createAsyncIterableIterator<T>(next: AsyncIterator<T>['next']): AsyncIterableIterator<T> {
+  return {
+    [Symbol.asyncIterator]() {
+      return this;
+    },
+    next,
+  };
+}
+
+export function createIterableIterator<T>(next: Iterator<T>['next']): IterableIterator<T> {
+  return {
+    [Symbol.iterator]() {
+      return this;
+    },
+    next,
   };
 }
 

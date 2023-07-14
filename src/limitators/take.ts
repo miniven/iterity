@@ -1,25 +1,58 @@
-import { createIteratorReturn, getIterator } from '../helpers';
+import {
+  createAsyncIterableIterator,
+  createIterableIterator,
+  createIteratorReturn,
+  getAsyncIterableIterator,
+  getIterableIterator,
+  isAsyncIterable,
+} from '../helpers';
 
-// @TODO Добавить поддержку отрицательного лимита, чтобы брать не первые, а последние N значений
-export function take<T>(limit: number) {
-  return (iterable: Iterable<T>): IterableIterator<T> => {
-    const iterator = getIterator(iterable);
+export function takeSync(limit: number) {
+  return <T>(iterable: Iterable<T>): IterableIterator<T> => {
+    const iterator = getIterableIterator(iterable);
 
-    return {
-      [Symbol.iterator]() {
-        return this;
-      },
-      next() {
-        const next = iterator.next();
+    return createIterableIterator(function () {
+      const next = iterator.next();
 
-        limit--;
+      limit--;
 
-        if (next.done || limit < 0) {
-          return createIteratorReturn();
-        }
+      if (next.done || limit < 0) {
+        return createIteratorReturn();
+      }
 
-        return next;
-      },
-    };
+      return next;
+    });
   };
+}
+
+export function takeAsync(limit: number) {
+  return <T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {
+    const iterator = getAsyncIterableIterator(iterable);
+
+    return createAsyncIterableIterator(async function () {
+      const next = iterator.next();
+
+      limit--;
+
+      if (limit < 0) {
+        return createIteratorReturn();
+      }
+
+      return next;
+    });
+  };
+}
+
+export function take<T>(limit: number) {
+  function helper(iterable: Iterable<T>): IterableIterator<T>;
+  function helper(iterable: AsyncIterable<T>): AsyncIterableIterator<T>;
+  function helper(iterable: Iterable<T> | AsyncIterable<T>): IterableIterator<T> | AsyncIterableIterator<T> {
+    if (isAsyncIterable(iterable)) {
+      return takeAsync(limit)(iterable);
+    }
+
+    return takeSync(limit)(iterable);
+  }
+
+  return helper;
 }

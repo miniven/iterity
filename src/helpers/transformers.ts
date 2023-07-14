@@ -1,6 +1,6 @@
-import { createIteratorReturn, createIteratorYield } from '.';
-import { Disposable } from '../core/containers/Disposable';
-import { Resumable } from '../core/containers/Resumable';
+import { createIteratorReturn, createIteratorYield, getIterableIterator } from '.';
+import { AsyncCollection } from '../core/containers/AsyncCollection';
+import { Collection } from '../core/containers/Collection';
 
 const enum State {
   IDLE = 'IDLE',
@@ -26,12 +26,44 @@ export function toIterableValue<T>(value: T): IterableIterator<T> {
   };
 }
 
-export function toDisposable<T>(value: T | Iterable<T>): Disposable<T> {
-  return new Disposable(value);
+export function toAsyncIterableValue<T>(value: T): AsyncIterableIterator<T> {
+  let state = State.IDLE;
+
+  return {
+    [Symbol.asyncIterator]() {
+      return this;
+    },
+    async next() {
+      if (state === State.DONE) {
+        return createIteratorReturn();
+      }
+
+      state = State.DONE;
+
+      return createIteratorYield(value);
+    },
+  };
 }
 
-export function toResumable<T>(value: T | Iterable<T>): Resumable<T> {
-  return new Resumable(value);
+export function iterableToAsyncIterable<T>(iterable: Iterable<T>): AsyncIterableIterator<T> {
+  const iterator = getIterableIterator(iterable);
+
+  return {
+    [Symbol.asyncIterator]() {
+      return this;
+    },
+    async next() {
+      return iterator.next();
+    },
+  };
+}
+
+export function toAsyncCollection<T>(value: T | Iterable<T> | AsyncIterable<T>): AsyncCollection<T> {
+  return new AsyncCollection(value);
+}
+
+export function toCollection<T>(value: T | Iterable<T>): Collection<T> {
+  return new Collection(value);
 }
 
 export function toSameContainer<T>(value: T): T {
