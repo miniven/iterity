@@ -70,3 +70,23 @@ for (const value of another) {
   console.log(value); // ОТРАБОТАЕТ?? НЕТ! Нужен COPY
 }
 ```
+
+## Примеры
+
+Хороший пример: есть массив URL'ов и нужно сделать запросы по каждому (или по некоторым через skip/take/slice) и вернуть асинхронный итератор
+
+```ts
+(async function () {
+  const collection = new Collection([1, 2, 3, 4])
+    .pipe(
+      skip(1),
+      map((value: number) => fake(value)),
+      append([5])
+    )
+    .transform(toAsyncCollection);
+
+  for await (const value of collection) {
+    console.log('sync to async', value);
+  }
+})();
+```

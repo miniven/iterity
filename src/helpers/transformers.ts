@@ -1,4 +1,10 @@
-import { createIteratorReturn, createIteratorYield, getIterableIterator } from '.';
+import {
+  createAsyncIterableIterator,
+  createIterableIterator,
+  createIteratorReturn,
+  createIteratorYield,
+  getIterableIterator,
+} from '.';
 import { AsyncCollection } from '../core/containers/AsyncCollection';
 import { Collection } from '../core/containers/Collection';
 
@@ -10,52 +16,43 @@ const enum State {
 export function toIterableValue<T>(value: T): IterableIterator<T> {
   let state = State.IDLE;
 
-  return {
-    [Symbol.iterator]() {
-      return this;
-    },
-    next() {
-      if (state === State.DONE) {
-        return createIteratorReturn();
-      }
+  return createIterableIterator(function () {
+    if (state === State.DONE) {
+      return createIteratorReturn();
+    }
 
-      state = State.DONE;
+    state = State.DONE;
 
-      return createIteratorYield(value);
-    },
-  };
+    return createIteratorYield(value);
+  });
 }
 
 export function toAsyncIterableValue<T>(value: T): AsyncIterableIterator<T> {
   let state = State.IDLE;
 
-  return {
-    [Symbol.asyncIterator]() {
-      return this;
-    },
-    async next() {
-      if (state === State.DONE) {
-        return createIteratorReturn();
-      }
+  return createAsyncIterableIterator(async function () {
+    if (state === State.DONE) {
+      return createIteratorReturn();
+    }
 
-      state = State.DONE;
+    state = State.DONE;
 
-      return createIteratorYield(value);
-    },
-  };
+    return createIteratorYield(value);
+  });
 }
 
 export function iterableToAsyncIterable<T>(iterable: Iterable<T>): AsyncIterableIterator<T> {
   const iterator = getIterableIterator(iterable);
 
-  return {
-    [Symbol.asyncIterator]() {
-      return this;
-    },
-    async next() {
-      return iterator.next();
-    },
-  };
+  return createAsyncIterableIterator(async function () {
+    const next = iterator.next();
+
+    if (!next.done) {
+      return createIteratorYield(next.value instanceof Promise ? await next.value : next.value);
+    }
+
+    return createIteratorReturn();
+  });
 }
 
 export function toAsyncCollection<T>(value: T | Iterable<T> | AsyncIterable<T>): AsyncCollection<T> {
