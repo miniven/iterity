@@ -1,8 +1,8 @@
-import { getIterator } from '../helpers';
+import { getIterableIterator } from '../helpers';
 
 export function tap<T>(effect: (value: T) => void) {
   return (iterable: Iterable<T>): IterableIterator<T> => {
-    const iterator = getIterator(iterable);
+    const iterator = getIterableIterator(iterable);
 
     return {
       [Symbol.iterator]() {

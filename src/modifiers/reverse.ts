@@ -1,5 +1,11 @@
 import { createIteratorReturn, createIteratorYield } from '../helpers';
 
+/**
+ * Возвращает итератор для обхода массива в обратном порядке
+ *
+ * @param array Массив элементов
+ * @returns Итератор по элементам массива
+ */
 function arrayToReversed<T>(array: Array<T>): IterableIterator<T> {
   let index = array.length - 1;
 
@@ -17,6 +23,12 @@ function arrayToReversed<T>(array: Array<T>): IterableIterator<T> {
   };
 }
 
+/**
+ * Вовзращает итератор для обхода переданной коллекции в обратном порядке.
+ *
+ * @param iterable Перебираемая коллекция
+ * @returns {IterableIterator} Итератор для обхода изначальной коллекции в обратном порядке
+ */
 export function reverse<T>(iterable: Iterable<T>): IterableIterator<T> {
   if (Array.isArray(iterable)) {
     return arrayToReversed(iterable);

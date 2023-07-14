@@ -4,6 +4,10 @@ export function isIterable<T>(value: any): value is Iterable<T> {
   return typeof value[Symbol.iterator] === 'function';
 }
 
+export function isAsyncIterable<T>(value: any): value is AsyncIterable<T> {
+  return typeof value[Symbol.asyncIterator] === 'function';
+}
+
 export const createIteratorYield = <T>(value: T): IteratorYieldResult<T> => ({
   done: false,
   value,
@@ -23,6 +27,19 @@ export function getIterableIterator<T>(value: Iterable<T>): IterableIterator<T> 
 
   return {
     [Symbol.iterator]() {
+      return this;
+    },
+    next() {
+      return iterator.next();
+    },
+  };
+}
+
+export function getAsyncIterableIterator<T>(value: AsyncIterable<T>): AsyncIterableIterator<T> {
+  const iterator = value[Symbol.asyncIterator]();
+
+  return {
+    [Symbol.asyncIterator]() {
       return this;
     },
     next() {
