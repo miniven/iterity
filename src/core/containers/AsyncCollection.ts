@@ -1,21 +1,24 @@
-import { getAsyncIterableIterator, isAsyncIterable, isCollectionInstance, isIterable } from '../../helpers';
+import { AbstractCollection } from './AbstractCollection';
+import { getAsyncIterableIterator, isAsyncIterable, isIterable } from '../../helpers';
 import { iterableToAsyncIterable, toAsyncIterableValue } from '../../helpers/transformers';
 
-import type { ICollection, TAsyncOperation, TAsyncPipeMethod } from '../types';
+import type { TAsyncOperation, TAsyncPipeMethod } from '../types';
+
+type TValue<T> = T | Iterable<T> | AsyncIterable<T>;
 
 /**
  * Контейнер для значения, с которым необходимо работать как с асинхронной итерируемой коллекцией.
  *
  * @class AsyncCollection<T>
  */
-export class AsyncCollection<T> implements ICollection<T>, AsyncIterable<T> {
+export class AsyncCollection<T> extends AbstractCollection<TValue<T>> implements AsyncIterable<T> {
   /**
    * Приводит переданное значение к итерируемому типу, если оно таким не является изначально
    *
    * @param value Любое значение, которое будет приведено к итерируемому, если таким не является
    * @returns {AsyncIterable} Асинхронный итератор
    */
-  static toAsyncIterable<T>(value: T | Iterable<T> | AsyncIterable<T>): AsyncIterable<T> {
+  static toAsyncIterable<T>(value: TValue<T>): AsyncIterable<T> {
     if (isAsyncIterable(value)) {
       return value;
     }
@@ -27,32 +30,23 @@ export class AsyncCollection<T> implements ICollection<T>, AsyncIterable<T> {
     return toAsyncIterableValue(value);
   }
 
-  /**
-   * Значение, хранящееся в контейнере
-   */
-  protected _value: T | Iterable<T> | AsyncIterable<T>;
+  transform(transformer: (value: TValue<T>) => TValue<T>): AsyncCollection<TValue<T>>;
 
-  /**
-   * @constructor
-   * @param {Iterable} value Значение, которое будет помещено в контейнер. Не перебираемое значение преобразуется к перебираемому.
-   */
-  constructor(value: T | Iterable<T> | AsyncIterable<T>) {
-    this._value = value;
-  }
+  transform<TNextContainer extends AbstractCollection<any>>(
+    transformer: (value: TValue<T>) => TNextContainer
+  ): TNextContainer;
 
-  transform<R extends ICollection<any>>(
-    transformer: (value: T | Iterable<T> | AsyncIterable<T>) => T | Iterable<T> | AsyncIterable<T> | R
-  ): R {
+  transform(transformer: (value: TValue<T>) => TValue<T> | AbstractCollection<any>): AbstractCollection<any> {
     const nextValue = transformer(this._value);
 
-    if (isCollectionInstance<R>(nextValue)) {
+    if (nextValue instanceof AbstractCollection) {
       return nextValue;
     }
 
-    return new AsyncCollection(nextValue) as unknown as R;
+    return new AsyncCollection(nextValue);
   }
 
-  pipe: TAsyncPipeMethod<T> = (...operations: Array<TAsyncOperation<any, any>>): AsyncCollection<any> => {
+  pipe: TAsyncPipeMethod<T> = (...operations: Array<TAsyncOperation<any, any>>): AsyncCollection<T> => {
     return new AsyncCollection(
       operations.reduce((value, func) => func(value), AsyncCollection.toAsyncIterable(this._value))
     );

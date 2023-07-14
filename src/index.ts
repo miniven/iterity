@@ -1,19 +1,17 @@
+import { product, sum } from './collectors';
 import { append } from './combiners/seq';
 import { AsyncCollection } from './core/containers/AsyncCollection';
 import { Collection } from './core/containers/Collection';
+import { enumerable } from './decorators/enumerable';
 import { tap } from './decorators/tap';
 import { createIteratorYield, toAsyncCollection } from './helpers';
 import { skip } from './limitators/skip';
-import { take } from './limitators/take';
+import { take, takeSync } from './limitators/take';
 import { map } from './modifiers/map';
 
-async function* randomGenerator(min = 0, max = 1) {
+function* randomGenerator(min = 0, max = 1) {
   while (true) {
-    yield new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(Math.floor(Math.random() * (max - min)) + min);
-      }, 3000);
-    });
+    yield Math.floor(Math.random() * (max - min)) + min;
   }
 }
 
@@ -41,20 +39,16 @@ const fake = (num: number) =>
   });
 
 (async function () {
-  const asyncCollection = new AsyncCollection(random).pipe(take(4), skip(1));
-  const collection = new Collection([1, 2, 3, 4])
+  const collection = new Collection(random)
     .pipe(
-      skip(1),
-      map((value: number) => fake(value)),
-      append([5])
+      tap((value) => console.log(value)),
+      takeSync(10)
     )
-    .transform(toAsyncCollection);
+    .collect(product);
 
-  for await (const value of collection) {
-    console.log('sync to async', value);
-  }
+  console.log(collection);
 
-  for await (const value of asyncCollection) {
-    console.log(value);
-  }
+  // for await (const value of collection) {
+  //   console.log('sync to async', value);
+  // }
 })();

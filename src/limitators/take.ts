@@ -43,10 +43,10 @@ export function takeAsync(limit: number) {
   };
 }
 
-export function take<T>(limit: number) {
-  function helper(iterable: Iterable<T>): IterableIterator<T>;
-  function helper(iterable: AsyncIterable<T>): AsyncIterableIterator<T>;
-  function helper(iterable: Iterable<T> | AsyncIterable<T>): IterableIterator<T> | AsyncIterableIterator<T> {
+export function take(limit: number) {
+  function helper<T>(iterable: Iterable<T>): IterableIterator<T>;
+  function helper<T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T>;
+  function helper<T>(iterable: Iterable<T> | AsyncIterable<T>): IterableIterator<T> | AsyncIterableIterator<T> {
     if (isAsyncIterable(iterable)) {
       return takeAsync(limit)(iterable);
     }
