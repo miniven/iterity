@@ -5,6 +5,7 @@ import {
   createIterableIterator,
   createIteratorReturn,
   createIteratorYield,
+  getAsyncIterableIterator,
   getIterableIterator,
 } from '.';
 
@@ -60,8 +61,8 @@ export function toAsyncIterableValue<T>(value: T): AsyncIterableIterator<T> {
  * А сам объект IteratorYieldResult будет являться промисом, как и предполагает асинхронный итератор.
  * Наглядно: { done: false, value: Promise<T> } => Promise<{ done: false, value: T }>
  *
- * @param iterable Итерируемая коллекция
- * @returns Асинхронный итератор
+ * @param {Iterable} iterable Итерируемая коллекция
+ * @returns {AsyncIterableIterator} Асинхронный итератор
  */
 export function iterableToAsyncIterable<T>(iterable: Iterable<T>): AsyncIterableIterator<T> {
   const iterator = getIterableIterator(iterable);
@@ -76,6 +77,28 @@ export function iterableToAsyncIterable<T>(iterable: Iterable<T>): AsyncIterable
     return createIteratorReturn();
   });
 }
+
+/**
+ * Приведение асинхронной итерируемой коллекции к синхронному итератору.
+ *
+ * @description Наглядно: Promise<{ done: false, value: T }> => { done: false, value: Promise<T> }
+ *
+ * @param {AsyncIterable} iterable Асинхронная итерируемая коллекция
+ * @returns {IterableIterator} Итератор
+ */
+// export function asyncIterableToIterable<T>(iterable: AsyncIterable<T>): IterableIterator<Promise<T>> {
+//   const iterator = getAsyncIterableIterator(iterable);
+
+//   return createIterableIterator(function () {
+//     const next = iterator.next();
+
+//     if (!next.done) {
+//       return createIteratorYield(next.then(iteratorYield => iteratorYield.value));
+//     }
+
+//     return createIteratorReturn();
+//   });
+// }
 
 /**
  * Помещает значение в контейнер для работы с асинхронной коллекцией
@@ -105,4 +128,12 @@ export function toCollection<T>(value: T | Iterable<T>): Collection<T> {
  */
 export function toSameContainer<T>(value: T): T {
   return value;
+}
+
+export function* toDisposable<T>(iterable: Iterable<T>): IterableIterator<T> {
+  yield* iterable;
+}
+
+export async function* toDisposableAsync<T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T> {
+  yield* iterable;
 }

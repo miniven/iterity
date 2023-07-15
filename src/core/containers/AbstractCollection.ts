@@ -7,6 +7,11 @@ export abstract class AbstractCollection<TValue> {
   protected _value: TValue;
 
   /**
+   * Возобновляемый ли итератор
+   */
+  protected _resumable: boolean = false;
+
+  /**
    * @constructor
    * @param {Iterable} value Значение, которое будет помещено в контейнер. Не перебираемое значение преобразуется к перебираемому.
    */
@@ -21,7 +26,7 @@ export abstract class AbstractCollection<TValue> {
    * @description Метод возвращает контейнерный тип: либо тот же, либо новый. Это способ передать значнеие от одного контейнера к другому.
    *
    * @param {Function} transformer Функция для возврата значения или контейнера.
-   * @returns Новый контейнер, хранящий значение
+   * @returns {AbstractCollection} Новый контейнер, хранящий значение
    */
   abstract transform(transformer: (value: TValue) => TValue): AbstractCollection<TValue>;
   abstract transform<T>(transformer: (value: TValue) => AbstractCollection<T>): AbstractCollection<T>;
@@ -32,7 +37,7 @@ export abstract class AbstractCollection<TValue> {
    * @description Метод возвращает тот же контейнерный тип, но с новым значением. Это способ изменить значение в контейнере.
    *
    * @param {Function} operations Функции для преобразования асинхронной коллекции
-   * @returns {AsyncCollection} Контейнер, содержащий преобразованную коллекцию
+   * @returns {AbstractCollection} Контейнер, содержащий преобразованную коллекцию
    */
   abstract pipe(...operations: Array<TOperation<any, any>>): AbstractCollection<TValue>;
   abstract pipe(...operations: Array<TAsyncOperation<any, any>>): AbstractCollection<TValue>;
@@ -46,5 +51,29 @@ export abstract class AbstractCollection<TValue> {
    * @returns Конечное значение
    */
   abstract collect<R>(collector: (iterable: TValue) => R): R;
-  abstract collect<R>(collector: (iterable: TValue) => R): R;
+
+  /**
+   * Приводит итератор (но не саму коллекцию) к возобновляемому типу, что значит итерацию можно возобновить после break
+   */
+  toResumable() {
+    this._resumable = true;
+
+    return this;
+  }
+
+  /**
+   * Приводит итератор (но не саму коллекцию) к невозобновляемому типу, что значит итерацию нельзя возобновить после break
+   */
+  toDisposable() {
+    this._resumable = false;
+
+    return this;
+  }
+
+  /**
+   * Проверяет, является ли итератор возобновляемым
+   */
+  isResumable() {
+    return this._resumable;
+  }
 }

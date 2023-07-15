@@ -1,6 +1,6 @@
 import { AbstractCollection } from './AbstractCollection';
 import { getAsyncIterableIterator, isAsyncIterable, isIterable } from '../../helpers';
-import { iterableToAsyncIterable, toAsyncIterableValue } from '../../helpers/transformers';
+import { iterableToAsyncIterable, toAsyncIterableValue, toDisposableAsync } from '../../helpers/transformers';
 
 import type { TAsyncOperation, TAsyncPipeMethod } from '../types';
 
@@ -57,6 +57,15 @@ export class AsyncCollection<T> extends AbstractCollection<TValue<T>> implements
   }
 
   [Symbol.asyncIterator](): AsyncIterableIterator<T> {
-    return getAsyncIterableIterator(AsyncCollection.toAsyncIterable(this._value));
+    const iterator = getAsyncIterableIterator(AsyncCollection.toAsyncIterable(this._value));
+
+    if (this._resumable) {
+      /**
+       * getAsyncIterableIterator возвращает итератор без метода return
+       */
+      return iterator;
+    }
+
+    return toDisposableAsync(iterator);
   }
 }

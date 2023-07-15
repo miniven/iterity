@@ -1,6 +1,6 @@
 import { AbstractCollection } from './AbstractCollection';
 import { getIterableIterator, isIterable } from '../../helpers';
-import { toIterableValue } from '../../helpers/transformers';
+import { toDisposable, toIterableValue } from '../../helpers/transformers';
 
 import type { TOperation, TPipeMethod } from '../types';
 
@@ -49,6 +49,15 @@ export class Collection<T> extends AbstractCollection<TValue<T>> implements Iter
   }
 
   [Symbol.iterator](): IterableIterator<T> {
-    return getIterableIterator(Collection.toIterable(this._value));
+    const iterator = getIterableIterator(Collection.toIterable(this._value));
+
+    if (this._resumable) {
+      /**
+       * getIterableIterator возвращает итератор без метода return
+       */
+      return iterator;
+    }
+
+    return toDisposable(iterator);
   }
 }

@@ -4,7 +4,13 @@ import { AsyncCollection } from './core/containers/AsyncCollection';
 import { Collection } from './core/containers/Collection';
 import { enumerable } from './decorators/enumerable';
 import { tap } from './decorators/tap';
-import { createIteratorYield, toAsyncCollection } from './helpers';
+import {
+  createIteratorYield,
+  getAsyncIterableIterator,
+  getIterableIterator,
+  getIterator,
+  toAsyncCollection,
+} from './helpers';
 import { skip } from './limitators/skip';
 import { take, takeSync } from './limitators/take';
 import { map } from './modifiers/map';
@@ -39,16 +45,17 @@ const fake = (num: number) =>
   });
 
 (async function () {
-  const collection = new Collection(random)
-    .pipe(
-      tap((value) => console.log(value)),
-      takeSync(10)
-    )
-    .collect(product);
+  const collection = new Collection(random).pipe(takeSync(10)).toResumable().collect(getIterableIterator);
 
-  console.log(collection);
+  for (const value of collection) {
+    console.log(value);
 
-  // for await (const value of collection) {
-  //   console.log('sync to async', value);
-  // }
+    if (value > 7) {
+      break;
+    }
+  }
+
+  for (const value of collection) {
+    console.log('second', value);
+  }
 })();
