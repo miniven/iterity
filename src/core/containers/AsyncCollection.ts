@@ -24,7 +24,7 @@ export class AsyncCollection<T> extends AbstractCollection<TValue<T>> implements
     }
 
     if (isIterable(value)) {
-      return iterableToAsyncIterable(value);
+      return iterableToAsyncIterable(value); // @TODO Неправильно выводится тип
     }
 
     return toAsyncIterableValue(value);

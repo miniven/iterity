@@ -11,13 +11,18 @@ import {
   getIterator,
   toAsyncCollection,
 } from './helpers';
+import { asyncIterableToIterable, toSyncCollection } from './helpers/transformers';
 import { skip } from './limitators/skip';
-import { take, takeSync } from './limitators/take';
+import { take, takeAsync, takeSync } from './limitators/take';
 import { map } from './modifiers/map';
 
-function* randomGenerator(min = 0, max = 1) {
+async function* randomGenerator(min = 0, max = 1) {
   while (true) {
-    yield Math.floor(Math.random() * (max - min)) + min;
+    yield new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(Math.floor(Math.random() * (max - min)) + min);
+      }, 1000);
+    });
   }
 }
 
@@ -45,17 +50,9 @@ const fake = (num: number) =>
   });
 
 (async function () {
-  const collection = new Collection(random).pipe(takeSync(10)).toResumable().collect(getIterableIterator);
+  const collection = new AsyncCollection(random).transform(toSyncCollection) as unknown as Collection<any>;
 
-  for (const value of collection) {
-    console.log(value);
-
-    if (value > 7) {
-      break;
-    }
-  }
-
-  for (const value of collection) {
-    console.log('second', value);
+  for (const promise of collection) {
+    console.log(await promise);
   }
 })();

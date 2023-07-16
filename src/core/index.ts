@@ -1,7 +1,7 @@
 export { Collection } from './containers/Collection';
 export { AsyncCollection } from './containers/AsyncCollection';
 export {
-  toCollection,
+  toSyncCollection,
   toAsyncCollection,
   toSameContainer,
   getIterator,

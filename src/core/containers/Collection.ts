@@ -1,6 +1,6 @@
 import { AbstractCollection } from './AbstractCollection';
-import { getIterableIterator, isIterable } from '../../helpers';
-import { toDisposable, toIterableValue } from '../../helpers/transformers';
+import { getIterableIterator, isAsyncIterable, isIterable } from '../../helpers';
+import { asyncIterableToIterable, toDisposable, toIterableValue } from '../../helpers/transformers';
 
 import type { TOperation, TPipeMethod } from '../types';
 
@@ -21,6 +21,10 @@ export class Collection<T> extends AbstractCollection<TValue<T>> implements Iter
   static toIterable<T>(value: TValue<T>): Iterable<T> {
     if (isIterable(value)) {
       return value;
+    }
+
+    if (isAsyncIterable(value)) {
+      return asyncIterableToIterable(value, 10) as any; // @TODO разобраться  // @TODO Неправильно выводится тип
     }
 
     return toIterableValue(value);

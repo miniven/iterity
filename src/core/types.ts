@@ -1,6 +1,10 @@
 import type { AsyncCollection } from './containers/AsyncCollection';
 import type { Collection } from './containers/Collection';
 
+export interface IterableIteratorSpecified<T, TReturn, TNext> extends Iterator<T, TReturn, TNext> {
+  [Symbol.iterator](): IterableIteratorSpecified<T, TReturn, TNext>;
+}
+
 export type TOperation<T, R> = (arg: Iterable<T>) => Iterable<R>;
 
 export type TAsyncOperation<T, R> = (arg: AsyncIterable<T>) => AsyncIterable<T>;
