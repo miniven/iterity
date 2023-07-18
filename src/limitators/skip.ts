@@ -5,12 +5,13 @@ import {
   getAsyncIterableIterator,
   getIterableIterator,
   isAsyncIterable,
-} from '../helpers';
+} from '../core';
 
 /**
+ * Возвращает функцию для создания итератора, пропускающего N первых элементов
  *
  * @param amount Количество элементов, которые нужно пропустить
- * @returns
+ * @returns Функция, принимающая итерируемый объект и возвращающая итератор
  */
 export function skipSync(amount: number) {
   return <T>(iterable: Iterable<T>): IterableIterator<T> => {
@@ -33,25 +34,25 @@ export function skipSync(amount: number) {
   };
 }
 
+/**
+ * Возвращает функцию для создания асинхронного итератора, пропускающего N первых элементов
+ *
+ * @param amount Количество элементов, которые нужно пропустить
+ * @returns Функция, принимающая асинхронный итерируемый объект и возвращающая асинхронный итератор
+ */
 export function skipAsync(amount: number) {
   return <T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {
     const iterator = getAsyncIterableIterator(iterable);
 
     return createAsyncIterableIterator(async function () {
-      let next = iterator.next();
+      let next = await iterator.next();
 
-      /**
-       * Пропускаем первый элемент, но это не значит, что не придётся его ждать.
-       * В асинхронных итераторах данные появляются асинхронно.
-       */
-      while (amount) {
-        next = iterator.next();
+      while (!next.done && amount) {
+        next = await iterator.next();
         amount--;
       }
 
-      const result = await next;
-
-      if (result.done) {
+      if (next.done) {
         return createIteratorReturn();
       }
 
@@ -60,10 +61,16 @@ export function skipAsync(amount: number) {
   };
 }
 
+/**
+ * Возвращает функцию для создания синхронного или асинхронного итератора, пропускающего N первых элементов
+ *
+ * @param amount Количество элементов, которые нужно пропустить
+ * @returns Функция, принимающая итерируемый объект и возвращающая синхронный/асинхронный итератор
+ */
 export function skip(amount: number) {
-  function helper<T>(iterable: Iterable<T>): IterableIterator<T>;
-  function helper<T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T>;
-  function helper<T>(iterable: Iterable<T> | AsyncIterable<T>): IterableIterator<T> | AsyncIterableIterator<T> {
+  function helper<R, TIterable extends Iterable<R>>(iterable: TIterable): IterableIterator<R>;
+  function helper<R, TIterable extends AsyncIterable<R>>(iterable: TIterable): AsyncIterableIterator<R>;
+  function helper<R>(iterable: Iterable<R> | AsyncIterable<R>): IterableIterator<R> | AsyncIterableIterator<R> {
     if (isAsyncIterable(iterable)) {
       return skipAsync(amount)(iterable);
     }

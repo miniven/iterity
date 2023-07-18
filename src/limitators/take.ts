@@ -5,7 +5,7 @@ import {
   getAsyncIterableIterator,
   getIterableIterator,
   isAsyncIterable,
-} from '../helpers';
+} from '../core';
 
 export function takeSync(limit: number) {
   return <T>(iterable: Iterable<T>): IterableIterator<T> => {
@@ -44,9 +44,9 @@ export function takeAsync(limit: number) {
 }
 
 export function take(limit: number) {
-  function helper<T>(iterable: Iterable<T>): IterableIterator<T>;
-  function helper<T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T>;
-  function helper<T>(iterable: Iterable<T> | AsyncIterable<T>): IterableIterator<T> | AsyncIterableIterator<T> {
+  function helper<R, TIterable extends AsyncIterable<R>>(iterable: TIterable): AsyncIterableIterator<R>;
+  function helper<R, TIterable extends Iterable<R>>(iterable: TIterable): IterableIterator<R>;
+  function helper<R>(iterable: Iterable<R> | AsyncIterable<R>): IterableIterator<R> | AsyncIterableIterator<R> {
     if (isAsyncIterable(iterable)) {
       return takeAsync(limit)(iterable);
     }

@@ -1,4 +1,4 @@
-import { getIterator } from '../helpers';
+import { getIterator } from '../core';
 
 export function resumable<T>(iterable: Iterable<T>): IterableIterator<T> {
   const iterator = getIterator(iterable);

@@ -1,10 +1,10 @@
 import { AbstractCollection } from './AbstractCollection';
-import { getIterableIterator, isAsyncIterable, isIterable } from '../../helpers';
-import { asyncIterableToIterable, toDisposable, toIterableValue } from '../../helpers/transformers';
+import { getIterableIterator, isAsyncIterable, isIterable } from '../helpers';
+import { asyncIterableToIterable, toDisposable, toIterableValue } from '../helpers/transformers';
 
-import type { TOperation, TPipeMethod } from '../types';
+import type { IterableIteratorSpecified, TOperation, TPipeMethod } from '../types';
 
-type TValue<T> = T | Iterable<T>;
+type TValue<T> = T | Iterable<T> | AsyncIterable<T>;
 
 /**
  * Контейнер для значения, с которым необходимо работать как с итерируемой коллекцией.
@@ -18,22 +18,23 @@ export class Collection<T> extends AbstractCollection<TValue<T>> implements Iter
    * @param value Любое значение, которое будет приведено к итерируемому, если таким не является
    * @returns {Iterable} Итератор
    */
-  static toIterable<T>(value: TValue<T>): Iterable<T> {
-    if (isIterable(value)) {
-      return value;
+  static toIterable<T>(value: TValue<T>): Iterable<T>;
+  static toIterable<T>(value: AsyncIterable<T>): IterableIteratorSpecified<Promise<T>, undefined, boolean | void> {
+    if (isAsyncIterable(value)) {
+      return asyncIterableToIterable(value, 10);
     }
 
-    if (isAsyncIterable(value)) {
-      return asyncIterableToIterable(value, 10) as any; // @TODO разобраться  // @TODO Неправильно выводится тип
+    if (isIterable(value)) {
+      return value;
     }
 
     return toIterableValue(value);
   }
 
-  transform(transformer: (value: TValue<T>) => TValue<T>): Collection<TValue<T>>;
   transform<TNextContainer extends AbstractCollection<any>>(
     transformer: (value: TValue<T>) => TNextContainer
   ): TNextContainer;
+  transform(transformer: (value: TValue<T>) => TValue<T>): Collection<TValue<T>>;
   transform(transformer: (value: TValue<T>) => TValue<T> | AbstractCollection<any>): AbstractCollection<any> {
     const nextValue = transformer(this._value);
 

@@ -1,6 +1,6 @@
 import { AbstractCollection } from './AbstractCollection';
-import { getAsyncIterableIterator, isAsyncIterable, isIterable } from '../../helpers';
-import { iterableToAsyncIterable, toAsyncIterableValue, toDisposableAsync } from '../../helpers/transformers';
+import { getAsyncIterableIterator, isAsyncIterable, isIterable } from '../helpers';
+import { iterableToAsyncIterable, toAsyncIterableValue, toDisposableAsync } from '../helpers/transformers';
 
 import type { TAsyncOperation, TAsyncPipeMethod } from '../types';
 
@@ -30,11 +30,11 @@ export class AsyncCollection<T> extends AbstractCollection<TValue<T>> implements
     return toAsyncIterableValue(value);
   }
 
-  transform(transformer: (value: TValue<T>) => TValue<T>): AsyncCollection<TValue<T>>;
-
   transform<TNextContainer extends AbstractCollection<any>>(
     transformer: (value: TValue<T>) => TNextContainer
   ): TNextContainer;
+
+  transform(transformer: (value: TValue<T>) => TValue<T>): AsyncCollection<TValue<T>>;
 
   transform(transformer: (value: TValue<T>) => TValue<T> | AbstractCollection<any>): AbstractCollection<any> {
     const nextValue = transformer(this._value);

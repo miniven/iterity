@@ -1,5 +1,5 @@
-import { AsyncCollection } from '../core/containers/AsyncCollection';
-import { Collection } from '../core/containers/Collection';
+import { AsyncCollection } from '../containers/AsyncCollection';
+import { Collection } from '../containers/Collection';
 import {
   createAsyncIterableIterator,
   createIterableIterator,
@@ -7,8 +7,9 @@ import {
   createIteratorYield,
   getAsyncIterableIterator,
   getIterableIterator,
+  isAsyncIterable,
 } from '.';
-import { IterableIteratorSpecified } from '../core/types';
+import { IterableIteratorSpecified } from '../types';
 
 const enum State {
   IDLE = 'IDLE',
@@ -130,7 +131,7 @@ export function toAsyncCollection<T>(value: T | Iterable<T> | AsyncIterable<T>):
  * @param value Любое значение, включая итерируемые коллекции
  * @returns Контейнер коллекции
  */
-export function toSyncCollection<T>(value: T | Iterable<T>): Collection<T> {
+export function toSyncCollection<T>(value: T | Iterable<T> | AsyncCollection<T>): Collection<T> {
   return new Collection(value);
 }
 
@@ -162,4 +163,23 @@ export function* toDisposable<T>(iterable: Iterable<T>): IterableIterator<T> {
  */
 export async function* toDisposableAsync<T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T> {
   yield* iterable;
+}
+
+/**
+ * Помещает переданное значение в контейнер.
+ *
+ * @description Если передан асинхронный итератор, то будет возвращён экземпляр AsyncCollection.
+ * Если передаётся любое другое значение, то возвращается экземпляр Collection.ы
+ *
+ * @param value Значение, которое будет помещено в итерируемый контейнер
+ * @returns Итерируемый экземпляр контейнера
+ */
+export function from<T>(value: AsyncIterable<T>): AsyncCollection<T>;
+export function from<T>(value: T | Iterable<T>): Collection<T>;
+export function from<T>(value: T | Iterable<T> | AsyncIterable<T>): Collection<T> | AsyncCollection<T> {
+  if (isAsyncIterable(value)) {
+    return new AsyncCollection(value);
+  }
+
+  return new Collection(value);
 }

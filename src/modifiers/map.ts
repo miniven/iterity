@@ -1,4 +1,4 @@
-import { createIteratorYield, getIterator } from '../helpers';
+import { createIterableIterator, createIteratorYield, getIterableIterator } from '../core';
 
 /**
  * Функция для преобразования значений исходного итератора в другие значения
@@ -8,21 +8,16 @@ import { createIteratorYield, getIterator } from '../helpers';
  */
 export function map<T, R>(mapper: (value: T) => R): (iterable: Iterable<T>) => IterableIterator<R> {
   return function (iterable: Iterable<T>): IterableIterator<R> {
-    const iterator = getIterator(iterable);
+    const iterator = getIterableIterator(iterable);
 
-    return {
-      [Symbol.iterator]() {
-        return this;
-      },
-      next() {
-        const next = iterator.next();
+    return createIterableIterator(function () {
+      const next = iterator.next();
 
-        if (next.done) {
-          return next;
-        }
+      if (next.done) {
+        return next;
+      }
 
-        return createIteratorYield(mapper(next.value));
-      },
-    };
+      return createIteratorYield(mapper(next.value));
+    });
   };
 }
