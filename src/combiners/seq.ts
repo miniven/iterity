@@ -1,4 +1,4 @@
-import { createIteratorReturn, getIterator } from '../helpers';
+import { createIteratorReturn, getIterator } from '../core';
 
 function sequence<T>(...iterables: Array<Iterable<T>>): IterableIterator<T> {
   const iterablesIterator = getIterator(iterables);

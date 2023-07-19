@@ -1,3 +1,3 @@
-export { Resumable } from './containers/Resumable';
-export { Disposable } from './containers/Disposable';
-export { toResumable, toDisposable, toSameContainer, getIterator, getIterableIterator, isIterable } from '../helpers';
+export { Collection } from './containers/Collection';
+export { AsyncCollection } from './containers/AsyncCollection';
+export * from './helpers';
