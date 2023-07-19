@@ -7,7 +7,7 @@ export interface IterableIteratorSpecified<T, TReturn, TNext> extends Iterator<T
 
 export type TOperation<T, R> = (arg: Iterable<T>) => Iterable<R>;
 
-export type TAsyncOperation<T, R> = (arg: AsyncIterable<T>) => AsyncIterable<T>;
+export type TAsyncOperation<T, R> = (arg: AsyncIterable<T>) => AsyncIterable<R>;
 
 export type TPipeMethod<T> = {
   (): Collection<T>;

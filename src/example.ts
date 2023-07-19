@@ -1,5 +1,7 @@
-import { from } from './core';
-import { slice } from './limitators';
+import { AsyncCollection, Collection, from, toAsyncCollection, toSyncCollection } from './core';
+import { enumerable, enumerableAsync } from './decorators';
+import { slice, takeAsync, takeSync } from './limitators';
+import { map } from './modifiers';
 
 function* randomGenerator(min = 0, max = 1) {
   while (true) {
@@ -7,12 +9,14 @@ function* randomGenerator(min = 0, max = 1) {
   }
 }
 
-const random = randomGenerator(5, 10);
+async function* subscribe(element: Element, name: string): AsyncIterableIterator<Event> {
+  return {} as AsyncIterableIterator<Event>;
+}
 
 (async function () {
-  const collection = from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).pipe(slice(0, 7));
+  const targets = from(subscribe(document.body, 'click')).pipe(enumerableAsync);
 
-  for (const number of collection) {
-    console.log(number);
+  for await (const target of targets) {
+    console.log(target); // [index, HTMLElement]
   }
 })();

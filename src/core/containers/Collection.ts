@@ -4,7 +4,7 @@ import { asyncIterableToIterable, toDisposable, toIterableValue } from '../helpe
 
 import type { IterableIteratorSpecified, TOperation, TPipeMethod } from '../types';
 
-type TValue<T> = T | Iterable<T> | AsyncIterable<T>;
+type TValue<T> = T | Iterable<T>;
 
 /**
  * Контейнер для значения, с которым необходимо работать как с итерируемой коллекцией.
@@ -18,11 +18,11 @@ export class Collection<T> extends AbstractCollection<TValue<T>> implements Iter
    * @param value Любое значение, которое будет приведено к итерируемому, если таким не является
    * @returns {Iterable} Итератор
    */
-  static toIterable<T>(value: TValue<T>): Iterable<T>;
-  static toIterable<T>(value: AsyncIterable<T>): IterableIteratorSpecified<Promise<T>, undefined, boolean | void> {
-    if (isAsyncIterable(value)) {
-      return asyncIterableToIterable(value, 10);
-    }
+  static toIterable<T>(value: TValue<T>): Iterable<T> {
+    // @TODO Сделать поддержку асинхронных итераторов, или убрать её отсюда подальше
+    // if (isAsyncIterable(value)) {
+    //   return asyncIterableToIterable(value, 10);
+    // }
 
     if (isIterable(value)) {
       return value;
@@ -45,7 +45,7 @@ export class Collection<T> extends AbstractCollection<TValue<T>> implements Iter
     return new Collection(nextValue);
   }
 
-  pipe: TPipeMethod<T> = (...operations: Array<TOperation<any, any>>): Collection<T> => {
+  pipe: TPipeMethod<T> = (...operations: Array<TOperation<any, any>>): Collection<any> => {
     return new Collection(operations.reduce((value, func) => func(value), Collection.toIterable(this._value)));
   };
 

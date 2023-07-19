@@ -46,7 +46,7 @@ export class AsyncCollection<T> extends AbstractCollection<TValue<T>> implements
     return new AsyncCollection(nextValue);
   }
 
-  pipe: TAsyncPipeMethod<T> = (...operations: Array<TAsyncOperation<any, any>>): AsyncCollection<T> => {
+  pipe: TAsyncPipeMethod<T> = (...operations: Array<TAsyncOperation<any, any>>): AsyncCollection<any> => {
     return new AsyncCollection(
       operations.reduce((value, func) => func(value), AsyncCollection.toAsyncIterable(this._value))
     );

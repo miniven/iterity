@@ -131,7 +131,7 @@ export function toAsyncCollection<T>(value: T | Iterable<T> | AsyncIterable<T>):
  * @param value Любое значение, включая итерируемые коллекции
  * @returns Контейнер коллекции
  */
-export function toSyncCollection<T>(value: T | Iterable<T> | AsyncCollection<T>): Collection<T> {
+export function toSyncCollection<T>(value: T | Iterable<T>): Collection<T> {
   return new Collection(value);
 }
 
