@@ -5,11 +5,11 @@
  * @returns Произведение всех элементов коллекции
  */
 export function product(iterable: Iterable<number>): number {
-  let result = 1;
+  let result;
 
   for (const num of iterable) {
-    result *= num;
+    result = num * (result ?? 1);
   }
 
-  return result;
+  return result ?? 0;
 }

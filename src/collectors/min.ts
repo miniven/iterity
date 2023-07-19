@@ -4,11 +4,11 @@
  * @param iterable Перебираемая коллекция чисел
  * @returns Минимальный элемент коллекции
  */
-export function min(iterable: Iterable<number>): number {
-  let min = Infinity;
+export function min(iterable: Iterable<number>): number | undefined {
+  let min;
 
   for (const num of iterable) {
-    if (num < min) {
+    if (num < (min ?? Infinity)) {
       min = num;
     }
   }

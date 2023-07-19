@@ -53,7 +53,7 @@ export abstract class AbstractCollection<TValue> {
   abstract collect<R>(collector: (iterable: TValue) => R): R;
 
   /**
-   * Приводит итератор (но не саму коллекцию) к возобновляемому типу, что значит итерацию можно возобновить после break
+   * Приводит итератор к возобновляемому типу, что значит итерацию можно возобновить после break
    */
   toResumable() {
     this._resumable = true;
@@ -62,7 +62,7 @@ export abstract class AbstractCollection<TValue> {
   }
 
   /**
-   * Приводит итератор (но не саму коллекцию) к невозобновляемому типу, что значит итерацию нельзя возобновить после break
+   * Приводит итератор к невозобновляемому типу, что значит итерацию нельзя возобновить после break
    */
   toDisposable() {
     this._resumable = false;
