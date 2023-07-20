@@ -25,11 +25,11 @@ export abstract class AbstractCollection<TValue> {
    *
    * @description Метод возвращает контейнерный тип: либо тот же, либо новый. Это способ передать значнеие от одного контейнера к другому.
    *
-   * @param {Function} transformer Функция для возврата значения или контейнера.
+   * @param {Function} switcher Функция для возврата значения или контейнера.
    * @returns {AbstractCollection} Новый контейнер, хранящий значение
    */
-  abstract transform(transformer: (value: TValue) => TValue): AbstractCollection<TValue>;
-  abstract transform<T>(transformer: (value: TValue) => AbstractCollection<T>): AbstractCollection<T>;
+  abstract switch(switcher: (value: TValue) => TValue): AbstractCollection<TValue>;
+  abstract switch<T>(switcher: (value: TValue) => AbstractCollection<T>): AbstractCollection<T>;
 
   /**
    * Метод для передачи функций, которые преобразовывают значения коллекции, или меняют поведение при итерации

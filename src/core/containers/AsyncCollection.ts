@@ -30,14 +30,14 @@ export class AsyncCollection<T> extends AbstractCollection<TValue<T>> implements
     return toAsyncIterableValue(value);
   }
 
-  transform<TNextContainer extends AbstractCollection<any>>(
-    transformer: (value: TValue<T>) => TNextContainer
+  switch<TNextContainer extends AbstractCollection<any>>(
+    switcher: (value: TValue<T>) => TNextContainer
   ): TNextContainer;
 
-  transform(transformer: (value: TValue<T>) => TValue<T>): AsyncCollection<TValue<T>>;
+  switch(switcher: (value: TValue<T>) => TValue<T>): AsyncCollection<TValue<T>>;
 
-  transform(transformer: (value: TValue<T>) => TValue<T> | AbstractCollection<any>): AbstractCollection<any> {
-    const nextValue = transformer(this._value);
+  switch(switcher: (value: TValue<T>) => TValue<T> | AbstractCollection<any>): AbstractCollection<any> {
+    const nextValue = switcher(this._value);
 
     if (nextValue instanceof AbstractCollection) {
       return nextValue;

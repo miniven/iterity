@@ -5,9 +5,9 @@ import {
   getAsyncIterableIterator,
   getIterableIterator,
   isAsyncIterable,
-} from '../core';
+} from '../core/helpers';
 
-export function takeSync(limit: number) {
+export function take(limit: number) {
   return <T>(iterable: Iterable<T>): IterableIterator<T> => {
     const iterator = getIterableIterator(iterable);
 
@@ -41,18 +41,4 @@ export function takeAsync(limit: number) {
       return next;
     });
   };
-}
-
-export function take(limit: number) {
-  function helper<R, TIterable extends AsyncIterable<R>>(iterable: TIterable): AsyncIterableIterator<R>;
-  function helper<R, TIterable extends Iterable<R>>(iterable: TIterable): IterableIterator<R>;
-  function helper<R>(iterable: Iterable<R> | AsyncIterable<R>): IterableIterator<R> | AsyncIterableIterator<R> {
-    if (isAsyncIterable(iterable)) {
-      return takeAsync(limit)(iterable);
-    }
-
-    return takeSync(limit)(iterable);
-  }
-
-  return helper;
 }
