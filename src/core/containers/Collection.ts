@@ -1,8 +1,8 @@
 import { AbstractCollection } from './AbstractCollection';
-import { getIterableIterator, isAsyncIterable, isIterable } from '../helpers';
-import { asyncIterableToIterable, toDisposable, toIterableValue } from '../helpers/transformers';
+import { getIterableIterator, isIterable } from '../helpers';
+import { toDisposable, toIterableValue } from '../helpers/transformers';
 
-import type { IterableIteratorSpecified, TOperation, TPipeMethod } from '../types';
+import type { TOperation, TPipeMethod } from '../types';
 
 type TValue<T> = T | Iterable<T>;
 
