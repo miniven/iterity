@@ -133,8 +133,9 @@ async function* subscribe(element: Element, name: string): AsyncIterableIterator
 }
 
 (async function() {
+  const extractTarget = (event: Event) => event.target;
   const targets = from(subscribe(document.body, 'click')).pipe(
-    mapAsync((event: Event) => event.target),
+    mapAsync(extractTarget),
     enumerableAsync
   );
 
