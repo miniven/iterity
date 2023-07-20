@@ -1,6 +1,6 @@
 import { AsyncCollection, Collection, from, toAsyncCollection, toSyncCollection } from './core';
 import { enumerable, enumerableAsync } from './decorators';
-import { filter, skip, slice, take, takeAsync } from './limitators';
+import { filter, skip, slice, take, takeAsync } from './selectors';
 import { map } from './modifiers';
 
 function* randomGenerator(min = 0, max = 1) {
