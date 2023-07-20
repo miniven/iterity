@@ -6,9 +6,7 @@
 
 Так же функции-коллекторы могут использоваться с методом `switch`. В таком случае метод вернёт экземпляр контейнера, в контексте которого был вызван, а сам возвращенный контейнер будет хранить итератор для значения, возвращенного функцией-коллектором.
 
----
-
-### [average](#average)
+## [average](#average)
 
 Вычисляет среднее значение элементов коллекции и возвращает число.
 
@@ -24,9 +22,7 @@ import { average } from 'iterity';
 const collection = from([1, 2, 3, 4]).collect(average); // 5
 ```
 
----
-
-### [count](#count)
+## [count](#count)
 
 Возвращает количество элементов в коллекции.
 
@@ -42,9 +38,7 @@ import { count } from 'iterity';
 const collection = from([1, 2, 3, 4]).collect(count); // 4
 ```
 
----
-
-### [first](#first)
+## [first](#first)
 
 Находит первый элемент коллекции и возвращает его, либо `undefined`, если коллекция пустая.
 
@@ -60,9 +54,7 @@ import { first } from 'iterity';
 const collection = from([1, 2, 3, 4]).collect(first); // 1
 ```
 
----
-
-### [join](#join)
+## [join](#join)
 
 Объединяет все элементы коллекции строк в одну строку.
 
@@ -78,9 +70,7 @@ import { join } from 'iterity';
 const collection = from([1, 2, 3, 4]).collect(join('_')); // 1_2_3_4
 ```
 
----
-
-### [last](#last)
+## [last](#last)
 
 Находит последний элемент коллекции и возвращает его, либо `undefined`, если коллекция пустая.
 
@@ -96,9 +86,7 @@ import { last } from 'iterity';
 const collection = from([1, 2, 3, 4]).collect(last); // 4
 ```
 
----
-
-### [max](#max)
+## [max](#max)
 
 Находит максимальный элемент коллекции чисел и возвращает его, либо `undefined`, если коллекция пустая.
 
@@ -114,9 +102,7 @@ import { max } from 'iterity';
 const collection = from([1, 2, 3, 4]).collect(max); // 4
 ```
 
----
-
-### [min](#min)
+## [min](#min)
 
 Находит минимальный элемент коллекции чисел и возвращает его, либо `undefined`, если коллекция пустая.
 
@@ -132,9 +118,7 @@ import { min } from 'iterity';
 const collection = from([1, 2, 3, 4]).collect(min); // 1
 ```
 
----
-
-### [product](#product)
+## [product](#product)
 
 Вычисляет произведение всех элементов коллекции чисел и возвращает его, либо `0`, если коллекция пустая.
 
@@ -150,9 +134,7 @@ import { product } from 'iterity';
 const collection = from([1, 2, 3, 4]).collect(product); // 24
 ```
 
----
-
-### [reduce](#reduce)
+## [reduce](#reduce)
 
 Функция для приведения элементов коллекции к одному значению. Аналог `Array.prototype.reduce`.
 
@@ -177,9 +159,7 @@ const collection = from([1, 2, 3, 4]).collect(
 ); // 4_3_2_1
 ```
 
----
-
-### [sum](#sum)
+## [sum](#sum)
 
 Вычисляет сумму всех элементов коллекции чисел и возвращает его, либо `0`, если коллекция пустая.
 
@@ -195,9 +175,7 @@ import { sum } from 'iterity';
 const collection = from([1, 2, 3, 4]).collect(sum); // 10
 ```
 
----
-
-### [toArray](#toArray)
+## [toArray](#toArray)
 
 Собирает все элементы коллекции в массив и возвращает его.
 
@@ -213,9 +191,7 @@ import { toArray } from 'iterity';
 const collection = from([1, 2, 3, 4]).collect(toArray); // [1, 2, 3, 4]
 ```
 
----
-
-### [toSet](#toSet)
+## [toSet](#toSet)
 
 Собирает все элементы коллекции в Set и возвращает его.
 
@@ -230,5 +206,3 @@ import { toSet } from 'iterity';
 
 const collection = from([1, 2, 3, 4]).collect(toSet); // Set(4) {1, 2, 3, 4}
 ```
-
----
