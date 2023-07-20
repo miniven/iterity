@@ -133,7 +133,10 @@ async function* subscribe(element: Element, name: string): AsyncIterableIterator
 }
 
 (async function() {
-  const targets = from(subscribe(document.body, 'click')).pipe(mapAsync((event: Event) => event.target), enumerableAsync);
+  const targets = from(subscribe(document.body, 'click')).pipe(
+    mapAsync((event: Event) => event.target),
+    enumerableAsync
+  );
 
   for await (const target of targets) {
     console.log(target); // [index, HTMLElement]
