@@ -1,6 +1,6 @@
 import { AsyncCollection, Collection, from, toAsyncCollection, toSyncCollection } from './core';
 import { enumerable, enumerableAsync } from './decorators';
-import { filter, skip, slice, take, takeAsync } from './selectors';
+import { filter, filterAsync, skip, skipWhile, slice, take, takeAsync } from './selectors';
 import { map } from './modifiers';
 
 function* randomGenerator(min = 0, max = 1) {
@@ -14,9 +14,7 @@ function* subscribe(element: Element, name: string): IterableIterator<Event> {
 }
 
 (async function () {
-  const targets = from(subscribe(document.body, 'click')).pipe(take(10));
+  const collection = from([1, 2, 3, 4]).pipe(slice(1, 3)); // OUTPUT: [2, 3]
 
-  for await (const target of targets) {
-    console.log(target); // [index, HTMLElement]
-  }
+  console.log([...collection]);
 })();

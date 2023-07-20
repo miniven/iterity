@@ -17,7 +17,7 @@ average(iterable: Iterable<number>): number
 Использование:
 
 ```ts
-import { average } from 'iterify';
+import { average } from 'iterity';
 
 const collection = from([1, 2, 3, 4]).collect(average); // 5
 ```
@@ -35,7 +35,7 @@ count<T>(iterable: Iterable<T>): number
 Использование:
 
 ```ts
-import { count } from 'iterify';
+import { count } from 'iterity';
 
 const collection = from([1, 2, 3, 4]).collect(count); // 4
 ```
@@ -53,7 +53,7 @@ first<T>(iterable: Iterable<T>): T | undefined
 Использование:
 
 ```ts
-import { first } from 'iterify';
+import { first } from 'iterity';
 
 const collection = from([1, 2, 3, 4]).collect(first); // 1
 ```
@@ -71,7 +71,7 @@ join(separator: string): (iterable: Iterable<string>) => string
 Использование:
 
 ```ts
-import { join } from 'iterify';
+import { join } from 'iterity';
 
 const collection = from([1, 2, 3, 4]).collect(join('_')); // 1_2_3_4
 ```
@@ -89,7 +89,7 @@ last<T>(iterable: Iterable<T>): T | undefined
 Использование:
 
 ```ts
-import { last } from 'iterify';
+import { last } from 'iterity';
 
 const collection = from([1, 2, 3, 4]).collect(last); // 4
 ```
@@ -107,7 +107,7 @@ max(iterable: Iterable<number>): number | undefined
 Использование:
 
 ```ts
-import { max } from 'iterify';
+import { max } from 'iterity';
 
 const collection = from([1, 2, 3, 4]).collect(max); // 4
 ```
@@ -125,7 +125,7 @@ min(iterable: Iterable<number>): number | undefined
 Использование:
 
 ```ts
-import { min } from 'iterify';
+import { min } from 'iterity';
 
 const collection = from([1, 2, 3, 4]).collect(min); // 1
 ```
@@ -143,7 +143,7 @@ product(iterable: Iterable<number>): number
 Использование:
 
 ```ts
-import { product } from 'iterify';
+import { product } from 'iterity';
 
 const collection = from([1, 2, 3, 4]).collect(product); // 24
 ```
@@ -168,7 +168,7 @@ reduce<T, U>(
 Использование:
 
 ```ts
-import { reduce } from 'iterify';
+import { reduce } from 'iterity';
 
 const collection = from([1, 2, 3, 4]).collect(
   reduce((acc, num) => `${String(num)}_${acc}`, '')
@@ -188,7 +188,7 @@ sum(iterable: Iterable<number>): number
 Использование:
 
 ```ts
-import { sum } from 'iterify';
+import { sum } from 'iterity';
 
 const collection = from([1, 2, 3, 4]).collect(sum); // 10
 ```
@@ -206,7 +206,7 @@ toArray<T>(iterable: Iterable<T>): Array<T>
 Использование:
 
 ```ts
-import { toArray } from 'iterify';
+import { toArray } from 'iterity';
 
 const collection = from([1, 2, 3, 4]).collect(toArray); // [1, 2, 3, 4]
 ```
@@ -224,7 +224,7 @@ toSet<T>(iterable: Iterable<T>): Set<T>
 Использование:
 
 ```ts
-import { toSet } from 'iterify';
+import { toSet } from 'iterity';
 
 const collection = from([1, 2, 3, 4]).collect(toSet); // Set(4) {1, 2, 3, 4}
 ```

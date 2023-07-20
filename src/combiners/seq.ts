@@ -1,44 +1,39 @@
-import { createIteratorReturn, getIterator } from '../core';
+import { createIterableIterator, createIteratorReturn, getIterator } from '../core';
 
 function sequence<T>(...iterables: Array<Iterable<T>>): IterableIterator<T> {
   const iterablesIterator = getIterator(iterables);
 
   let currentIterator = iterablesIterator.next().value[Symbol.iterator]();
 
-  return {
-    [Symbol.iterator]() {
-      return this;
-    },
-    next() {
-      const next = currentIterator.next();
+  return createIterableIterator(function () {
+    const next = currentIterator.next();
+
+    /**
+     * Если текущий вложенный итератор закончился, смотрим следующий
+     */
+    if (next.done) {
+      const nextIterator = iterablesIterator.next();
 
       /**
-       * Если текущий вложенный итератор закончился, смотрим следующий
+       * Если следующего нет, считаем, что закончили
        */
-      if (next.done) {
-        const nextIterator = iterablesIterator.next();
-
-        /**
-         * Если следующего нет, считаем, что закончили
-         */
-        if (nextIterator.done) {
-          return createIteratorReturn();
-        }
-
-        /**
-         * Иначе начинаем итерацию по следующему вложенному итератору
-         */
-        currentIterator = nextIterator.value[Symbol.iterator]();
-
-        return currentIterator.next();
+      if (nextIterator.done) {
+        return createIteratorReturn();
       }
 
       /**
-       * Возвращаем текущее значение текущего вложенного итератора
+       * Иначе начинаем итерацию по следующему вложенному итератору
        */
-      return next;
-    },
-  };
+      currentIterator = nextIterator.value[Symbol.iterator]();
+
+      return currentIterator.next();
+    }
+
+    /**
+     * Возвращаем текущее значение текущего вложенного итератора
+     */
+    return next;
+  });
 }
 
 export function prepend<T, R>(...iterables: Array<Iterable<R>>) {

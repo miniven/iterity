@@ -1,10 +1,4 @@
-import {
-  createAsyncIterableIterator,
-  createIterableIterator,
-  getAsyncIterableIterator,
-  getIterator,
-  isAsyncIterable,
-} from '../core';
+import { createAsyncIterableIterator, createIterableIterator, getAsyncIterableIterator, getIterator } from '../core';
 
 /**
  * Возвращает функцию для создания итератора по элементам, удовлетворяющим предикату
@@ -12,7 +6,7 @@ import {
  * @param predicate Функция-предикат для проверки условия
  * @returns Функция, принимающая итерируемый объект и возвращающая итератор
  */
-export function filterSync<T>(predicate: (value: T) => boolean) {
+export function filter<T>(predicate: (value: T) => boolean) {
   return function (iterable: Iterable<T>): IterableIterator<T> {
     const iterator = getIterator(iterable);
 
@@ -56,24 +50,4 @@ export function filterAsync<T>(predicate: (value: T) => boolean) {
       return next;
     });
   };
-}
-
-/**
- * Возвращает функцию для создания синхронного/асинхронного итератора по элементам, удовлетворяющим предикату
- *
- * @param predicate Функция-предикат для проверки условия
- * @returns Функция, принимающая итерируемый объект и возвращающая синхронный/асинхронный итератор
- */
-export function filter<R>(predicate: (value: R) => boolean) {
-  function helper<TIterable extends AsyncIterable<R>>(iterable: TIterable): AsyncIterableIterator<R>;
-  function helper<TIterable extends Iterable<R>>(iterable: TIterable): IterableIterator<R>;
-  function helper(iterable: Iterable<R> | AsyncIterable<R>): IterableIterator<R> | AsyncIterableIterator<R> {
-    if (isAsyncIterable(iterable)) {
-      return filterAsync(predicate)(iterable);
-    }
-
-    return filterSync(predicate)(iterable);
-  }
-
-  return helper;
 }

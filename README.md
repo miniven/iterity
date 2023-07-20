@@ -170,7 +170,7 @@ for (const number of collection) {
 Вспомогательная функция `from` получает любое значение и возвращает экземпляр контейнера `Collection`, или `AsyncCollection`.
 
 ```ts
-import { from, take } from 'iterify';
+import { from, take } from 'iterity';
 
 function* randomGenerator(min = 0, max = 1) {
   while (true) {
@@ -189,7 +189,7 @@ for (const number of collection) {
 #### Пример 3: Создание асинхронной коллекции из 10 псевдослучайных чисел:
 
 ```ts
-import { from, take } from 'iterify';
+import { from, take } from 'iterity';
 
 async function* asyncRandomGenerator(min = 0, max = 1) {
   ...
@@ -208,7 +208,7 @@ for await (const number of asyncCollection) {
 Так тоже можно, потому что строки в JavaScript тоже являются итерируемыми коллекциями. Метод `collect` приводит коллекцию к произвольному значению, в данном случае к строке:
 
 ```ts
-import { from, map, join } from 'iterify';
+import { from, map, join } from 'iterity';
 
 const uppercaseSeq = from('abcdef')
   .pipe(map((letter: string) => letter.toUpperCase()))
@@ -220,7 +220,7 @@ console.log(uppercaseSeq); // ABCDEF
 #### Пример 5: Обработка событий с использованием асинхронного итератора:
 
 ```ts
-import { from, mapAsync, enumerableAsync } from 'iterify';
+import { from, mapAsync, enumerableAsync } from 'iterity';
 
 async function* subscribe(element: Element, name: string): AsyncIterableIterator<Event> {
   ...

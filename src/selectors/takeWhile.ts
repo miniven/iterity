@@ -4,7 +4,6 @@ import {
   createIteratorReturn,
   getAsyncIterableIterator,
   getIterableIterator,
-  isAsyncIterable,
 } from '../core';
 
 const enum State {
@@ -12,7 +11,13 @@ const enum State {
   DONE = 'DONE',
 }
 
-export function takeWhileSync<T>(predicate: (value: T) => boolean) {
+/**
+ * Функция для создания итератора, перебирающего первые элементы исходного итератора, пока соблюдается условие.
+ *
+ * @param predicate Функция-предикат
+ * @returns Функция, создающая итератор
+ */
+export function takeWhile<T>(predicate: (value: T) => boolean) {
   return (iterable: Iterable<T>): IterableIterator<T> => {
     const iterator = getIterableIterator(iterable);
     let state = State.IDLE;
@@ -31,6 +36,12 @@ export function takeWhileSync<T>(predicate: (value: T) => boolean) {
   };
 }
 
+/**
+ * Функция для создания асинхронного итератора, перебирающего первые элементы исходного итератора, пока соблюдается условие.
+ *
+ * @param predicate Функция-предикат
+ * @returns Функция, создающая итератор
+ */
 export function takeWhileAsync<T>(predicate: (value: T) => boolean) {
   return (iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {
     const iterator = getAsyncIterableIterator(iterable);
@@ -49,18 +60,4 @@ export function takeWhileAsync<T>(predicate: (value: T) => boolean) {
       return next;
     });
   };
-}
-
-export function takeWhile<R>(predicate: (value: R) => boolean) {
-  function helper<TIterable extends Iterable<R>>(iterable: TIterable): IterableIterator<R>;
-  function helper<TIterable extends AsyncIterable<R>>(iterable: TIterable): AsyncIterableIterator<R>;
-  function helper(iterable: Iterable<R> | AsyncIterable<R>): IterableIterator<R> | AsyncIterableIterator<R> {
-    if (isAsyncIterable(iterable)) {
-      return takeWhileAsync(predicate)(iterable);
-    }
-
-    return takeWhileSync(predicate)(iterable);
-  }
-
-  return helper;
 }

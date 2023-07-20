@@ -4,7 +4,6 @@ import {
   createIteratorReturn,
   getAsyncIterableIterator,
   getIterableIterator,
-  isAsyncIterable,
 } from '../core';
 
 const enum State {
@@ -13,12 +12,12 @@ const enum State {
 }
 
 /**
- * Возвращает функцию для создания итератора, пропускающего N первых элементов, пока соблюдается условие
+ * Возвращает функцию для создания итератора, пропускающего первые элементы, пока соблюдается условие
  *
  * @param predicate Функция-предикат, которая возвращает true для элементов, которые должны быть пропущены
  * @returns Функция, принимающая итерируемый объект и возвращающая итератор
  */
-export function skipWhileSync<T>(predicate: (value: T) => boolean) {
+export function skipWhile<T>(predicate: (value: T) => boolean) {
   return (iterable: Iterable<T>): IterableIterator<T> => {
     const iterator = getIterableIterator(iterable);
     let state = State.IDLE;
@@ -42,7 +41,7 @@ export function skipWhileSync<T>(predicate: (value: T) => boolean) {
 }
 
 /**
- * Возвращает функцию для создания асинхронного итератора, пропускающего N первых элементов, пока соблюдается условие
+ * Возвращает функцию для создания асинхронного итератора, пропускающего первые элементы, пока соблюдается условие
  *
  * @param predicate Функция-предикат, которая возвращает true для элементов, которые должны быть пропущены
  * @returns Функция, принимающая асинхронный итерируемый объект и возвращающая асинхронный итератор
@@ -69,24 +68,4 @@ export function skipWhileAsync<T>(predicate: (value: T) => boolean) {
       return next;
     });
   };
-}
-
-/**
- * Возвращает функцию для создания синхронного или асинхронного итератора, пропускающего N первых элементов, пока соблюдается условие
- *
- * @param predicate Функция-предикат, которая возвращает true для элементов, которые должны быть пропущены
- * @returns Функция, принимающая итерируемый объект и возвращающая синхронный/асинхронный итератор
- */
-export function skipWhile<R>(predicate: (value: R) => boolean) {
-  function helper<TIterable extends Iterable<R>>(iterable: TIterable): IterableIterator<R>;
-  function helper<TIterable extends AsyncIterable<R>>(iterable: TIterable): AsyncIterableIterator<R>;
-  function helper(iterable: Iterable<R> | AsyncIterable<R>): IterableIterator<R> | AsyncIterableIterator<R> {
-    if (isAsyncIterable(iterable)) {
-      return skipWhileAsync(predicate)(iterable);
-    }
-
-    return skipWhileSync(predicate)(iterable);
-  }
-
-  return helper;
 }

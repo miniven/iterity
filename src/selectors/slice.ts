@@ -4,17 +4,16 @@ import {
   createIteratorReturn,
   getAsyncIterableIterator,
   getIterableIterator,
-  isAsyncIterable,
 } from '../core';
 
 /**
  * Создаёт функцию, которая создаёт итератор для определённого диапазона значений.
  *
  * @param from Индекс начала диапазона. Элемент с этим индексом включается в диапазон.
- * @param length Количество элементов в диапазоне.
+ * @param to Индекс конца диапазона. Элемент с этим индексом не включается в диапазон.
  * @returns Функция, принимающая итерируемый объект и возвращающая итератор
  */
-export function sliceSync(from: number, length: number) {
+export function slice(from: number, to: number) {
   return <T>(iterable: Iterable<T>): IterableIterator<T> => {
     const iterator = getIterableIterator(iterable);
     let pointer = 0;
@@ -27,7 +26,7 @@ export function sliceSync(from: number, length: number) {
         pointer++;
       }
 
-      if (next.done || pointer >= length) {
+      if (next.done || pointer >= to) {
         return createIteratorReturn();
       }
 
@@ -42,10 +41,10 @@ export function sliceSync(from: number, length: number) {
  * Создаёт функцию, которая создаёт асинхронный итератор для определённого диапазона значений.
  *
  * @param from Индекс начала диапазона. Элемент с этим индексом включается в диапазон.
- * @param length Количество элементов в диапазоне.
+ * @param to Индекс конца диапазона. Элемент с этим индексом не включается в диапазон.
  * @returns Функция, принимающая итерируемый объект и возвращающая асинхронный итератор
  */
-export function sliceAsync(from: number, length: number) {
+export function sliceAsync(from: number, to: number) {
   return <T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {
     const iterator = getAsyncIterableIterator(iterable);
     let pointer = 0;
@@ -58,7 +57,7 @@ export function sliceAsync(from: number, length: number) {
         pointer++;
       }
 
-      if (next.done || pointer >= length) {
+      if (next.done || pointer >= to) {
         return createIteratorReturn();
       }
 
@@ -67,25 +66,4 @@ export function sliceAsync(from: number, length: number) {
       return next;
     });
   };
-}
-
-/**
- * Создаёт функцию, которая создаёт синхронный/асинхронный итератор для определённого диапазона значений.
- *
- * @param from Индекс начала диапазона. Элемент с этим индексом включается в диапазон.
- * @param length Количество элементов в диапазоне.
- * @returns Функция, принимающая итерируемый объект и возвращающая итератор
- */
-export function slice(from: number, length: number) {
-  function helper<R, TIterable extends Iterable<R>>(iterable: TIterable): IterableIterator<R>;
-  function helper<R, TIterable extends AsyncIterable<R>>(iterable: TIterable): AsyncIterableIterator<R>;
-  function helper<R>(iterable: Iterable<R> | AsyncIterable<R>): IterableIterator<R> | AsyncIterableIterator<R> {
-    if (isAsyncIterable(iterable)) {
-      return sliceAsync(from, length)(iterable);
-    }
-
-    return sliceSync(from, length)(iterable);
-  }
-
-  return helper;
 }

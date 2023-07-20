@@ -4,9 +4,14 @@ import {
   createIteratorReturn,
   getAsyncIterableIterator,
   getIterableIterator,
-  isAsyncIterable,
 } from '../core/helpers';
 
+/**
+ * Функция для создания итератора для первых N элементов исходного итератора.
+ *
+ * @param limit Количество первых элементов
+ * @returns Функция, создающая итератор
+ */
 export function take(limit: number) {
   return <T>(iterable: Iterable<T>): IterableIterator<T> => {
     const iterator = getIterableIterator(iterable);
@@ -25,6 +30,12 @@ export function take(limit: number) {
   };
 }
 
+/**
+ * Функция для создания асинхронного итератора для первых N элементов исходного итератора.
+ *
+ * @param limit Количество первых элементов
+ * @returns Функция, создающая итератор
+ */
 export function takeAsync(limit: number) {
   return <T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {
     const iterator = getAsyncIterableIterator(iterable);
