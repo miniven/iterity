@@ -4,9 +4,20 @@
 
 Функции-селекторы предназначены для выбора определенных значений из коллекции и используются с методом `pipe`, хотя могут использоваться обособленно без контейнеров.
 
----
+- [filter](#filter)
+- [filterAsync](#filter_async)
+- [skip](#skip)
+- [skipAsync](#skip_async)
+- [skipWhile](#skipwhile)
+- [skipWhileAsync](#skipwhile_async)
+- [slice](#slice)
+- [sliceAsync](#slice_async)
+- [take](#take)
+- [takeAsync](#take_async)
+- [takeWhile](#takewhile)
+- [takeWhileAsync](#takewhile_async)
 
-### [filter](#filter)
+## [filter](#filter)
 
 Функция для фильтрации коллекции по условию, заданному в предикате:
 
@@ -22,9 +33,7 @@ import { from, filter } from 'iterity';
 const collection = from([1, 6, 2, 8]).pipe(filter((num) => num > 2)); // OUTPUT: [6, 8]
 ```
 
----
-
-### [filterAsync](#filter_async)
+## [filterAsync](#filter_async)
 
 Функция для фильтрации асинхронной коллекции по условию, заданному в предикате:
 
@@ -42,9 +51,7 @@ const collection = new AsyncCollection([1, 6, 2, 8]).pipe(
 ); // OUTPUT: [6, 8]
 ```
 
----
-
-### [skip](#skip)
+## [skip](#skip)
 
 Функция для создания итератора, исключающего N первых элементов исходного итератора:
 
@@ -60,9 +67,7 @@ import { from, skip } from 'iterity';
 const collection = from([1, 2, 3, 4]).pipe(skip(1)); // OUTPUT: [2, 3, 4]
 ```
 
----
-
-### [skipAsync](#skip_async)
+## [skipAsync](#skip_async)
 
 Функция для создания асинхронного итератора, исключающего N первых элементов исходного итератора:
 
@@ -78,9 +83,7 @@ import { AsyncCollection, skipAsync } from 'iterity';
 const collection = new AsyncCollection([1, 2, 3, 4]).pipe(skipAsync(1)); // OUTPUT: [2, 3, 4]
 ```
 
----
-
-### [skipWhile](#skipwhile)
+## [skipWhile](#skipwhile)
 
 Функция для создания итератора, исключающего первые элементы исходного итератора, пока соблюдается условие:
 
@@ -96,9 +99,7 @@ import { from, skipWhile } from 'iterity';
 const collection = from([1, 2, 3, 4]).pipe(skipWhile((num) => num < 3)); // OUTPUT: [3, 4]
 ```
 
----
-
-### [skipWhileAsync](#skipwhile_async)
+## [skipWhileAsync](#skipwhile_async)
 
 Функция для создания асинхронного итератора, исключающего первые элементы исходного итератора, пока соблюдается условие:
 
@@ -116,9 +117,7 @@ const collection = new AsyncCollection([1, 2, 3, 4]).pipe(
 ); // OUTPUT: [3, 4]
 ```
 
----
-
-### [slice](#slice)
+## [slice](#slice)
 
 Функция для создания итератора для определённого диапазона значений исходного итератора:
 
@@ -134,9 +133,7 @@ import { from, slice } from 'iterity';
 const collection = from([1, 2, 3, 4]).pipe(slice(1, 3)); // OUTPUT: [2, 3]
 ```
 
----
-
-### [sliceAsync](#slice_async)
+## [sliceAsync](#slice_async)
 
 Функция для создания асинхронного итератора для определённого диапазона значений исходного итератора:
 
@@ -152,9 +149,7 @@ import { AsyncCollection, sliceAsync } from 'iterity';
 const collection = new AsyncCollection([1, 2, 3, 4]).pipe(sliceAsync(1, 3)); // OUTPUT: [2, 3]
 ```
 
----
-
-### [take](#take)
+## [take](#take)
 
 Функция для создания итератора для первых N элементов исходного итератора:
 
@@ -170,9 +165,7 @@ import { from, take } from 'iterity';
 const collection = from([1, 2, 3, 4]).pipe(take(3)); // OUTPUT: [1, 2, 3]
 ```
 
----
-
-### [takeAsync](#take_async)
+## [takeAsync](#take_async)
 
 Функция для создания асинхронного итератора для первых N элементов исходного итератора:
 
@@ -188,9 +181,7 @@ import { AsyncCollection, takeAsync } from 'iterity';
 const collection = new AsyncCollection([1, 2, 3, 4]).pipe(takeAsync(3)); // OUTPUT: [1, 2, 3]
 ```
 
----
-
-### [takeWhile](#takewhile)
+## [takeWhile](#takewhile)
 
 Функция для создания итератора, перебирающего первые элементы исходного итератора, пока соблюдается условие:
 
@@ -206,9 +197,7 @@ import { from, takeWhile } from 'iterity';
 const collection = from([1, 2, 3, 4]).pipe(takeWhile((num) => num < 3)); // OUTPUT: [1, 2]
 ```
 
----
-
-### [takeWhileAsync](#takewhile_async)
+## [takeWhileAsync](#takewhile_async)
 
 Функция для создания асинхронного итератора, перебирающего первые элементы исходного итератора, пока соблюдается условие:
 
@@ -225,5 +214,3 @@ const collection = new AsyncCollection([1, 2, 3, 4]).pipe(
   takeWhileAsync((num) => num < 3)
 ); // OUTPUT: [1, 2]
 ```
-
----
