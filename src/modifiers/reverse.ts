@@ -1,4 +1,9 @@
-import { createIterableIterator, createIteratorReturn, createIteratorYield } from '../core';
+import {
+  createAsyncIterableIterator,
+  createIterableIterator,
+  createIteratorReturn,
+  createIteratorYield,
+} from '../core';
 
 /**
  * Возвращает итератор для обхода массива в обратном порядке
@@ -19,7 +24,7 @@ function arrayToReversed<T>(array: Array<T>): IterableIterator<T> {
 }
 
 /**
- * Вовзращает итератор для обхода переданной коллекции в обратном порядке.
+ * Возвращает итератор для обхода переданной коллекции в обратном порядке.
  *
  * @param iterable Перебираемая коллекция
  * @returns {IterableIterator} Итератор для обхода изначальной коллекции в обратном порядке

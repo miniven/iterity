@@ -1,8 +1,9 @@
 {
-  "name": "iterable-lib",
+  "name": "iterity",
   "version": "0.0.1",
-  "description": "the great way to feel comfortable with iterable structures",
-  "main": "index.js",
+  "description": "Библиотека для работы с итерируемыми структурами данных",
+  "keywords": ["iterator", "asynciterator", "iterable", "asynciterable", "async", "generator", "typescript"],
+  "main": "build/index.js",
   "scripts": {
     "compile": "tsc"
   },
