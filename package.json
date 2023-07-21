@@ -8,6 +8,10 @@
   "scripts": {
     "compile": "rm -rf build && tsc"
   },
+  "engines": {
+    "npm": ">=8.0.0",
+    "node": ">=16.0.0"
+  },
   "author": "Veniamin Trepachko <trepven@gmail.com>",
   "license": "ISC",
   "devDependencies": {
