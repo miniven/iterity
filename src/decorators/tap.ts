@@ -1,9 +1,15 @@
-import { createIterableIterator, getIterableIterator } from '../core';
+import {
+  createAsyncIterableIterator,
+  createIterableIterator,
+  getAsyncIterableIterator,
+  getIterableIterator,
+} from '../core';
 
 /**
- * Добавляет вызов эффекта при итерации объекта на каждый элемент
+ * Создает итератор, который возвращает те же элементы, что и исходная коллекция,
+ * но позволяет выполнить заданное действие (эффект) для каждого элемента при прохождении по ним.
  *
- * @param effect Эффект, который будет вызвать для каждого элемента при итерации
+ * @param effect Коллбэк-функция, которая будет вызвана для каждого элемента при обходе коллекции
  * @returns Итератор
  */
 export function tap<T>(effect: (value: T) => void) {
@@ -12,6 +18,29 @@ export function tap<T>(effect: (value: T) => void) {
 
     return createIterableIterator(function () {
       const next = iterator.next();
+
+      if (!next.done) {
+        effect(next.value);
+      }
+
+      return next;
+    });
+  };
+}
+
+/**
+ * Создает асинхронный итератор, который возвращает те же элементы, что и исходная коллекция,
+ * но позволяет выполнить заданное действие (эффект) для каждого элемента при прохождении по ним.
+ *
+ * @param effect Коллбэк-функция, которая будет вызвана для каждого элемента при обходе коллекции
+ * @returns Итератор
+ */
+export function tapAsync<T>(effect: (value: T) => void) {
+  return (iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {
+    const iterator = getAsyncIterableIterator(iterable);
+
+    return createAsyncIterableIterator(async function () {
+      const next = await iterator.next();
 
       if (!next.done) {
         effect(next.value);
