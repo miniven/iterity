@@ -2,6 +2,7 @@
   "name": "iterity",
   "version": "0.0.2-alpha",
   "description": "Библиотека для работы с итерируемыми структурами данных",
+  "homepage": "https://github.com/miniven/iterity/blob/main/README.md",
   "keywords": [
     "iterator",
     "asynciterator",
@@ -17,8 +18,10 @@
   ],
   "scripts": {
     "_clear": "rm -rf build",
+    "_reinstall": "rm -rf node_modules && npm ci",
+    "test": "",
     "compile": "npm run _clear && tsc",
-    "test": ""
+    "prepublishOnly": "npm run _reinstall && npm run compile"
   },
   "engines": {
     "npm": ">=8.0.0",
@@ -26,6 +29,10 @@
   },
   "author": "Veniamin Trepachko <trepven@gmail.com>",
   "license": "ISC",
+  "repository": {
+    "type": "git", 
+    "url": "https://github.com/miniven/iterity.git" 
+  },
   "devDependencies": {
     "typescript": "^5.1.6"
   }
