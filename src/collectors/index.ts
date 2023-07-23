@@ -1,6 +1,7 @@
 export * from './average';
 export * from './count';
 export * from './first';
+export * from './find';
 export * from './last';
 export * from './join';
 export * from './max';

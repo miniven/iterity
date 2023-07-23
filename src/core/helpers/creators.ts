@@ -1,3 +1,5 @@
+import { TCurry2 } from '../types';
+
 /**
  * Создаёт объект, который возвращает метод next итератора, если обход не завершён
  * { done: false, value }
@@ -52,3 +54,17 @@ export function createIterableIterator<T>(next: Iterator<T>['next']): IterableIt
     next,
   };
 }
+
+// type TFunc<Args extends any[], R> = (...args: Args) => R;
+
+// export const curry2 = function<TFirst, TSecond, TResult>(fn: (first: TFirst, second: TSecond) => TResult) {
+//   function helper(this: any, ...args: any[]) {
+//     if (args.length >= fn.length) {
+//       return fn.apply(this, args);
+//     }
+
+//     return helper.bind(this, ...args) as ReturnType<F>;
+//   }
+
+//   return helper;
+// }
