@@ -2,58 +2,56 @@ import { TAsyncOperation, TOperation } from '../types';
 
 export abstract class AbstractCollection<TValue> {
   /**
-   * Значение, хранящееся в контейнере
+   * Raw value, which was put in the container
    */
   protected _value: TValue;
 
   /**
-   * Возобновляемый ли итератор
+   * If iterator of the container can be resumed after break
    */
   protected _resumable: boolean = false;
 
   /**
    * @constructor
-   * @param {Iterable} value Значение, которое будет помещено в контейнер. Не перебираемое значение преобразуется к перебираемому.
+   * @param {Iterable} value Raw value, which will be put in the container
    */
   constructor(value: TValue) {
     this._value = value;
   }
 
   /**
-   * Метод для изменения типа контейнера. Изначально значение хранится в контейнере AsyncCollection<T>, но этот метод
-   * позволяет изменить тип контейнера, например, на Collection<T>, или на обыкновенный массив
+   * Method for changing the container type. Returns a container type:
+   * either same container type or brand new if you need to pass the value to another container
    *
-   * @description Метод возвращает контейнерный тип: либо тот же, либо новый. Это способ передать значнеие от одного контейнера к другому.
+   * @example
+   *   new Collection([1, 2, 3]).switch(toSet);
    *
-   * @param {Function} switcher Функция для возврата значения или контейнера.
-   * @returns {AbstractCollection} Новый контейнер, хранящий значение
+   * @param {Function} switcher Function which returns any value or new container
+   * @returns {AbstractCollection} The container, returned from switcher, or new container with returned value
    */
   abstract switch(switcher: (value: TValue) => TValue): AbstractCollection<TValue>;
   abstract switch<T>(switcher: (value: TValue) => AbstractCollection<T>): AbstractCollection<T>;
 
   /**
-   * Метод для передачи функций, которые преобразовывают значения коллекции, или меняют поведение при итерации
+   * Method for creating a composition of iterators. Returns new instance of the same container type.
+   * This method behaves like we change the value in container.
    *
-   * @description Метод возвращает тот же контейнерный тип, но с новым значением. Это способ изменить значение в контейнере.
-   *
-   * @param {Function} operations Функции для преобразования асинхронной коллекции
-   * @returns {AbstractCollection} Контейнер, содержащий преобразованную коллекцию
+   * @param {Function} operations Functions which add iterators over the original iterated value
+   * @returns {AbstractCollection} New iterable container with new value
    */
   abstract pipe(...operations: Array<TOperation<any, any>>): AbstractCollection<TValue>;
   abstract pipe(...operations: Array<TAsyncOperation<any, any>>): AbstractCollection<TValue>;
 
   /**
-   * Функция для преобразования коллекции к конечному значению и возврата этого значения
+   * Method for reducing a collection to a single value. Returns exactly that value which returns the collector function.
    *
-   * @description Метод возвращает значение, каким оно было возвращено из функции. Это способ привести контейнерный тип к произвольному типу.
-   *
-   * @param {Function} collector Функция-коллектор для преобразования коллекции к одному значению
-   * @returns Конечное значение
+   * @param {Function} collector Function which reduces a collection to a single value
+   * @returns value
    */
   abstract collect<R>(collector: (iterable: TValue) => R): R;
 
   /**
-   * Приводит итератор к возобновляемому типу, что значит итерацию можно возобновить после break
+   * Makes iterator of the container resumable, so that it can be resumed after break
    */
   toResumable() {
     this._resumable = true;
@@ -62,7 +60,7 @@ export abstract class AbstractCollection<TValue> {
   }
 
   /**
-   * Приводит итератор к невозобновляемому типу, что значит итерацию нельзя возобновить после break
+   * Makes iterator of the container disposable, so that it can not be resumed after break
    */
   toDisposable() {
     this._resumable = false;
@@ -71,7 +69,7 @@ export abstract class AbstractCollection<TValue> {
   }
 
   /**
-   * Проверяет, является ли итератор возобновляемым
+   * Returns if iterator of the container can be resumed after break
    */
   isResumable() {
     return this._resumable;

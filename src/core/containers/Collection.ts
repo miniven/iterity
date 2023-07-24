@@ -7,16 +7,16 @@ import type { TOperation, TPipeMethod } from '../types';
 type TValue<T> = T | Iterable<T>;
 
 /**
- * Контейнер для значения, с которым необходимо работать как с итерируемой коллекцией.
+ * Container for a value to work with as an iterable collection
  *
  * @class Collection<T>
  */
 export class Collection<T> extends AbstractCollection<TValue<T>> implements Iterable<T> {
   /**
-   * Приводит переданное значение к итерируемому типу, если оно таким не является изначально
+   * Makes the passed value iterable type if it is not initially
    *
-   * @param value Любое значение, которое будет приведено к итерируемому, если таким не является
-   * @returns {Iterable} Итератор
+   * @param value Any value
+   * @returns {Iterable} Iterable
    */
   static toIterable<T>(value: TValue<T>): Iterable<T> {
     // @TODO Сделать поддержку асинхронных итераторов, или убрать её отсюда подальше

@@ -7,16 +7,16 @@ import type { TAsyncOperation, TAsyncPipeMethod } from '../types';
 type TValue<T> = T | Iterable<T> | AsyncIterable<T>;
 
 /**
- * Контейнер для значения, с которым необходимо работать как с асинхронной итерируемой коллекцией.
+ * Container for a value to work with as an asynchronous iterable collection
  *
  * @class AsyncCollection<T>
  */
 export class AsyncCollection<T> extends AbstractCollection<TValue<T>> implements AsyncIterable<T> {
   /**
-   * Приводит переданное значение к итерируемому типу, если оно таким не является изначально
+   * Makes the passed value asynchronous iterable type if it is not initially
    *
-   * @param value Любое значение, которое будет приведено к итерируемому, если таким не является
-   * @returns {AsyncIterable} Асинхронный итератор
+   * @param value Any value
+   * @returns {AsyncIterable} Async iterable
    */
   static toAsyncIterable<T>(value: TValue<T>): AsyncIterable<T> {
     if (isAsyncIterable(value)) {
@@ -24,7 +24,7 @@ export class AsyncCollection<T> extends AbstractCollection<TValue<T>> implements
     }
 
     if (isIterable(value)) {
-      return iterableToAsyncIterable(value); // @TODO Неправильно выводится тип
+      return iterableToAsyncIterable(value);
     }
 
     return toAsyncIterableValue(value);
