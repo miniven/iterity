@@ -1,5 +1,3 @@
-import { TCurry2 } from '../types';
-
 /**
  * Creates iterator yield result object: { done: false, value }
  *
