@@ -5,11 +5,9 @@ import {
   createIterableIterator,
   createIteratorReturn,
   createIteratorYield,
-  getAsyncIterableIterator,
   getIterableIterator,
   isAsyncIterable,
 } from '.';
-import { IterableIteratorSpecified } from '../types';
 
 const enum State {
   IDLE = 'IDLE',
@@ -17,10 +15,10 @@ const enum State {
 }
 
 /**
- * Принимает любое значение и приводит его к итератору с одной итерацией, на которой будет отдано это значение.
+ * Creates «one-iteration» iterator over passed value
  *
- * @param value Обычное значение, которое будет помещено в контекст итератора
- * @returns {IterableIterator} Асинхронный итератор
+ * @param value Any value
+ * @returns {IterableIterator} Iterable iterator
  */
 export function toIterableValue<T>(value: T): IterableIterator<T> {
   let state = State.IDLE;
@@ -37,10 +35,10 @@ export function toIterableValue<T>(value: T): IterableIterator<T> {
 }
 
 /**
- * Принимает любое значение и приводит его к асинхронному итератору с одной итерацией, на которой будет отдано это значение.
+ * Creates «one-iteration» asynchronous iterator over passed value
  *
- * @param value Обычное значение, которое будет помещено в контекст итератора
- * @returns {AsyncIterableIterator} Асинхронный итератор
+ * @param value Any value
+ * @returns {AsyncIterableIterator} Asynchronous iterable iterator
  */
 export function toAsyncIterableValue<T>(value: T): AsyncIterableIterator<T> {
   let state = State.IDLE;
@@ -57,14 +55,20 @@ export function toAsyncIterableValue<T>(value: T): AsyncIterableIterator<T> {
 }
 
 /**
- * Приведение итерируемой коллекции к асинхронному итератору.
+ * Makes asynchronous iterable iterator from iterable value.
  *
- * @description Работает так, что если в коллекции есть промис, то в IteratorYieldResult попадёт значение, которое он отдаст.
- * А сам объект IteratorYieldResult будет являться промисом, как и предполагает асинхронный итератор.
- * Наглядно: { done: false, value: Promise<T> } => Promise<{ done: false, value: T }>
+ * @example <caption>{ done: false, value: T } => Promise<{ done: false, value: T }></caption>
+ *   const iterator = iterableToAsyncIterable([100]);
  *
- * @param {Iterable} iterable Итерируемая коллекция
- * @returns {AsyncIterableIterator} Асинхронный итератор
+ *   iterator.next(); // Promise<{ done: false, value: 100 }>
+ *
+ * @example <caption>{ done: false, value: Promise\<T\> } => Promise<{ done: false, value: T }></caption>
+ *   const iterator = iterableToAsyncIterable([Promise.resolve(100)]);
+ *
+ *   iterator.next(); // Promise<{ done: false, value: 100 }>
+ *
+ * @param {Iterable} iterable Iterable value
+ * @returns {AsyncIterableIterator} Asynchronous iterable iterator
  */
 export function iterableToAsyncIterable<T>(iterable: Iterable<T>): AsyncIterableIterator<T> {
   const iterator = getIterableIterator(iterable);
@@ -81,98 +85,73 @@ export function iterableToAsyncIterable<T>(iterable: Iterable<T>): AsyncIterable
 }
 
 /**
- * Приведение асинхронной итерируемой коллекции к синхронному итератору.
+ * Puts passed value to AsyncCollection container and returns its instance
  *
- * @description Особенность функции в том, что при значение done хранится внутри промиса, а мы не дожидаемся его окончания.
- * Поэтому остановкой итератора придётся управлять вручную, передав в очередной вызов iterator.next() аргумент true, если итератору завершён.
+ * @example
+ *   from([1, 2, 3]).switch(toAsyncCollection);
  *
- * Наглядно: Promise<{ done: false, value: T }> => { done: false, value: Promise<T> }
- *
- * @param {AsyncIterable} iterable Асинхронная итерируемая коллекция
- * @param {Number} iterationsCount Количество итераций, чтобы итератор мог понять, когда завершиться
- * @returns {IterableIterator} Итератор
- */
-export function asyncIterableToIterable<T>(
-  iterable: AsyncIterable<T>,
-  iterationsCount: number = Infinity
-): IterableIteratorSpecified<Promise<T>, undefined, boolean | void> {
-  const iterator = getAsyncIterableIterator(iterable);
-
-  return {
-    [Symbol.iterator]() {
-      return this;
-    },
-    next(done: boolean) {
-      const next = iterator.next();
-
-      if (!done && iterationsCount > 0) {
-        iterationsCount--;
-        return createIteratorYield(next.then((iteratorYield) => iteratorYield.value));
-      }
-
-      return createIteratorReturn();
-    },
-  };
-}
-
-/**
- * Помещает значение в контейнер для работы с асинхронной коллекцией
- *
- * @param value Любое значение, включая итерируемые коллекции
- * @returns Контейнер асинхронной коллекции
+ * @param value Any value
+ * @returns AsyncCollection instance
  */
 export function toAsyncCollection<T>(value: T | Iterable<T> | AsyncIterable<T>): AsyncCollection<T> {
   return new AsyncCollection(value);
 }
 
 /**
- * Помещает значение в контейнер для работы с синхронной коллекцией
+ * Puts passed value to Collection container and returns its instance
  *
- * @param value Любое значение, включая итерируемые коллекции
- * @returns Контейнер коллекции
+ * @example
+ *   from([1, 2, 3]).switch(toSyncCollection);
+ *
+ * @param value Any value
+ * @returns Collection instance
  */
 export function toSyncCollection<T>(value: T | Iterable<T>): Collection<T> {
   return new Collection(value);
 }
 
 /**
- * Возвращает значение как оно есть, чтобы метод switch у контейнера поместил его в контейнер того же типа
+ * Returns passed value without any changes.
+ * Used with switch method so that it could return new instance of the same collection.
  *
- * @param value Любое значение, которое будет помещено в новый контейнер
- * @returns То же самое значение
+ * @example
+ *   from([1, 2, 3]).switch(toSameContainer);
+ *
+ * @param value Any value
+ * @returns Passed value
  */
 export function toSameContainer<T>(value: T): T {
   return value;
 }
 
 /**
- * Преобразует итератор коллекции к невозобновляемому типу
+ * Creates new iterator over passed iterable value to make it disposable
  *
- * @param {Iterable} iterable Итерируемой объект
- * @returns {IterableIterator} Итерируемый объект, итератор которого реализует метод return
+ * @param {Iterable} iterable Iterable value
+ * @returns {IterableIterator} iterable iterator with "return" method implementation
  */
 export function* toDisposable<T>(iterable: Iterable<T>): IterableIterator<T> {
   yield* iterable;
 }
 
 /**
- * Преобразует асинхронный итератор коллекции к невозобновляемому типу
+ * Creates new asynchronous iterator over passed iterable value to make it disposable
  *
- * @param {Iterable} iterable Итерируемой объект
- * @returns {IterableIterator} Итерируемый объект, асинхронный итератор которого реализует метод return
+ * @param {AsyncIterable} iterable Async iterable value
+ * @returns {AsyncIterableIterator} Asynchronous iterable iterator with "return" method implementation
  */
 export async function* toDisposableAsync<T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T> {
   yield* iterable;
 }
 
 /**
- * Помещает переданное значение в контейнер.
+ * Puts passed value to a container.
  *
- * @description Если передан асинхронный итератор, то будет возвращён экземпляр AsyncCollection.
- * Если передаётся любое другое значение, то возвращается экземпляр Collection.ы
+ * @description AsyncCollection instance returns for values with asynchronous iterator.
+ * Otherwise, Collection instance will be returned.
  *
- * @param value Значение, которое будет помещено в итерируемый контейнер
- * @returns Итерируемый экземпляр контейнера
+ * @param value Any value
+ * @returns Iterable collection instance
  */
 export function from<T>(value: AsyncIterable<T>): AsyncCollection<T>;
 export function from<T>(value: T | Iterable<T>): Collection<T>;

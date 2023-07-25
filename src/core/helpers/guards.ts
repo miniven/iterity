@@ -1,18 +1,18 @@
 /**
- * Type Guard. Проверяет, является ли значение итерируемым
+ * Type Guard. Check if passed value is iterable
  *
- * @param value Проверяемое значение
- * @returns Является ли значение итерируемым
+ * @param value Any value to check
+ * @returns If passed value is iterable
  */
 export function isIterable<T>(value: any): value is Iterable<T> {
   return typeof value[Symbol.iterator] === 'function';
 }
 
 /**
- * Type Guard. Проверяет, имеет ли значение асинхронный итератор
+ * Type Guard. Check if passed value has asynchronous iterator
  *
- * @param value Проверяемое значение
- * @returns Имеет ли значение асинхронный итератор
+ * @param value Any value to check
+ * @returns If passed value has asynchronous iterator
  */
 export function isAsyncIterable<T>(value: any): value is AsyncIterable<T> {
   return typeof value[Symbol.asyncIterator] === 'function';

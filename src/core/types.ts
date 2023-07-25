@@ -149,28 +149,15 @@ export type TAsyncPipeMethod<T> = {
   ): AsyncCollection<J>;
 };
 
+export type TCurry1<TFirst, TResult> = (first: TFirst) => TResult;
+
 export type TCurry2<TFirst, TSecond, TResult> = {
-  (fn: (first: TFirst, second: TSecond) => void): (first: TFirst, second: TSecond) => TResult;
-  (fn: (first: TFirst, second: TSecond) => void): (first: TFirst) => (second: TSecond) => TResult;
+  (first: TFirst): TCurry1<TSecond, TResult>;
+  (first: TFirst, second: TSecond): TResult;
 };
 
 export type TCurry3<TFirst, TSecond, TThird, TResult> = {
-  (fn: (first: TFirst, second: TSecond, third: TThird) => void): (
-    first: TFirst
-  ) => (second: TSecond) => (third: TThird) => TResult;
-
-  (fn: (first: TFirst, second: TSecond, third: TThird) => void): (
-    first: TFirst
-  ) => (second: TSecond, third: TThird) => TResult;
-
-  (fn: (first: TFirst, second: TSecond, third: TThird) => void): (
-    first: TFirst,
-    second: TSecond
-  ) => (third: TThird) => TResult;
-
-  (fn: (first: TFirst, second: TSecond, third: TThird) => void): (
-    first: TFirst,
-    second: TSecond,
-    third: TThird
-  ) => TResult;
+  (first: TFirst): TCurry2<TSecond, TThird, TResult>;
+  (first: TFirst, second: TSecond): TCurry1<TThird, TResult>;
+  (first: TFirst, second: TSecond, third: TThird): TResult;
 };

@@ -19,10 +19,10 @@ export function getAsyncIterator<T>(value: AsyncIterable<T>): AsyncIterator<T> {
 }
 
 /**
- * Возвращает новый итерируемый итератор переданного объекта
+ * Extracts passed value iterator and returns new iterable iterator
  *
- * @param value Итерируемый объект
- * @returns Итерируемый итератор
+ * @param value Iterable value
+ * @returns Iterable iterator for passed value
  */
 export function getIterableIterator<T>(value: Iterable<T>): IterableIterator<T> {
   const iterator = value[Symbol.iterator]();
@@ -38,10 +38,10 @@ export function getIterableIterator<T>(value: Iterable<T>): IterableIterator<T> 
 }
 
 /**
- * Возвращает новый итерируемый асинхронный итератор переданного объекта
+ * Extracts passed value asynchronous iterator and returns new asynchronous iterable iterator
  *
- * @param value Итерируемый объект
- * @returns Итерируемый асинхронный итератор
+ * @param value Asynchronous iterable value
+ * @returns Asynchronous iterable iterator for passed value
  */
 export function getAsyncIterableIterator<T>(value: AsyncIterable<T>): AsyncIterableIterator<T> {
   const iterator = value[Symbol.asyncIterator]();

@@ -36,6 +36,9 @@ export abstract class AbstractCollection<TValue> {
    * Method for creating a composition of iterators. Returns new instance of the same container type.
    * This method behaves like we change the value in container.
    *
+   * @example
+   *   new Collection([1, 2, 3]).pipe(take(5), enumarable);
+   *
    * @param {Function} operations Functions which add iterators over the original iterated value
    * @returns {AbstractCollection} New iterable container with new value
    */
@@ -44,6 +47,9 @@ export abstract class AbstractCollection<TValue> {
 
   /**
    * Method for reducing a collection to a single value. Returns exactly that value which returns the collector function.
+   *
+   * @example
+   *   new Collection([1, 2, 3]).collect(product);
    *
    * @param {Function} collector Function which reduces a collection to a single value
    * @returns value
