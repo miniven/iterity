@@ -7,10 +7,13 @@ import {
 } from '../core';
 
 /**
- * Создает итератор, который объединяет элементы переданных коллекций в одну.
+ * Creates an iterator that combines the elements of the passed collections into one collection.
  *
- * @params iterables Итерируемые коллекции
- * @returns Итератор
+ * @example
+ *   sequence([1, 2], new Set([3, 4]), [5]); // [1, 2, 3, 4, 5]
+ *
+ * @params iterables Iterable collections
+ * @returns Iterable iterator
  */
 export function sequence<T>(iterable: Iterable<T>, ...iterables: Array<Iterable<T>>): IterableIterator<T> {
   const iterablesIterator = getIterator(iterables);
@@ -49,10 +52,17 @@ export function sequence<T>(iterable: Iterable<T>, ...iterables: Array<Iterable<
 }
 
 /**
- * Создает асинхронный итератор, который объединяет элементы переданных коллекций в одну.
+ * Creates an asyncronous iterator that combines the elements of the passed collections into one collection.
  *
- * @params iterables Асинхронные терируемые коллекции
- * @returns Асинхронный итератор
+ * @example
+ *   const collection = sequenceAsync(new AsyncCollection([1, 2]), new AsyncCollection([4, 5]));
+ *
+ *   for await (const value of collection) {
+ *     console.log(value);
+ *   }
+ *
+ * @params iterables Asynchronous iterable collections
+ * @returns Asynchronous iterable iterator
  */
 export function sequenceAsync<T>(
   iterable: AsyncIterable<T>,

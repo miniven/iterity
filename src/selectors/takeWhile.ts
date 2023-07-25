@@ -12,10 +12,16 @@ const enum State {
 }
 
 /**
- * Функция для создания итератора, перебирающего первые элементы исходного итератора, пока соблюдается условие.
+ * Creates iterator that yields first elements of the original iterable value while predicate returns true
  *
- * @param predicate Функция-предикат
- * @returns Функция, создающая итератор
+ * @example
+ *   from([1, 2, 3, 4, 5]).pipe(takeWhile((value) => value < 3)); // [1, 2]
+ *
+ * @example
+ *   from([100, 1, 2, 3, 4]).pipe(takeWhile((value) => value < 3)); // []
+ *
+ * @param predicate Predicate function
+ * @returns Function which accepts the target collection and creates new iterable iterator
  */
 export function takeWhile<T>(predicate: (value: T) => boolean) {
   return (iterable: Iterable<T>): IterableIterator<T> => {
@@ -37,10 +43,16 @@ export function takeWhile<T>(predicate: (value: T) => boolean) {
 }
 
 /**
- * Функция для создания асинхронного итератора, перебирающего первые элементы исходного итератора, пока соблюдается условие.
+ * Creates asynchronous iterator that yields first elements of the original iterable value while predicate returns true
  *
- * @param predicate Функция-предикат
- * @returns Функция, создающая итератор
+ * @example
+ *   new AsyncCollection([1, 2, 3, 4, 5]).pipe(takeWhileAsync((value) => value < 3)); // Promise {[1, 2]}
+ *
+ * @example
+ *   new AsyncCollection([100, 1, 2, 3, 4]).pipe(takeWhileAsync((value) => value < 3)); // Promise {[]}
+ *
+ * @param predicate Predicate function
+ * @returns Function which accepts the target collection and creates new asynchronous iterable iterator
  */
 export function takeWhileAsync<T>(predicate: (value: T) => boolean) {
   return (iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {

@@ -1,10 +1,13 @@
 import { createIterableIterator, createIteratorReturn, createIteratorYield, getIterator } from '../core';
 
 /**
- * Создаёт итератор по кортежам элементов переданных коллекций
+ * Creates an iterator over tuples of elements of the passed collections
  *
- * @params iterables Множество итериуемых коллекций
- * @returns Итератор
+ * @example
+ *   zip([1, 2, 3], ["one", "two"]); // [[1, "one"], [2, "two"], [3, null]]
+ *
+ * @params iterables Iterable collections
+ * @returns Iterable Iterator
  */
 export function zip<T>(...iterables: Array<Iterable<T>>): IterableIterator<Array<T>> {
   const iterators = iterables.map((iterable: Iterable<T>) => getIterator(iterable));

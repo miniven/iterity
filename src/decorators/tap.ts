@@ -6,11 +6,14 @@ import {
 } from '../core';
 
 /**
- * Создает итератор, который возвращает те же элементы, что и исходная коллекция,
- * но позволяет выполнить заданное действие (эффект) для каждого элемента при прохождении по ним.
+ * Creates iterator that yields the same elements as the original collection,
+ * but also calls passed callback (effect) for each element
  *
- * @param effect Коллбэк-функция, которая будет вызвана для каждого элемента при обходе коллекции
- * @returns Итератор
+ * @example
+ *   from(["start", "process", "finish"]).pipe(tap((step) => sendEvent(step)));
+ *
+ * @param effect Callback function to be called for each element
+ * @returns Function which accepts the target collection and creates new iterable iterator
  */
 export function tap<T>(effect: (value: T) => void) {
   return (iterable: Iterable<T>): IterableIterator<T> => {
@@ -29,11 +32,14 @@ export function tap<T>(effect: (value: T) => void) {
 }
 
 /**
- * Создает асинхронный итератор, который возвращает те же элементы, что и исходная коллекция,
- * но позволяет выполнить заданное действие (эффект) для каждого элемента при прохождении по ним.
+ * Creates asynchronous iterator that yields the same elements as the original collection,
+ * but also calls passed callback (effect) for each element
  *
- * @param effect Коллбэк-функция, которая будет вызвана для каждого элемента при обходе коллекции
- * @returns Итератор
+ * @example
+ *   new AsyncCollection(["start", "process", "finish"]).pipe(tapAsync((step) => sendEvent(step)));
+ *
+ * @param effect Callback function to be called for each element
+ * @returns Function which accepts the target collection and creates new asynchronous iterable iterator
  */
 export function tapAsync<T>(effect: (value: T) => void) {
   return (iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {

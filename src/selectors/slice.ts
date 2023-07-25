@@ -7,11 +7,14 @@ import {
 } from '../core';
 
 /**
- * Создаёт функцию, которая создаёт итератор для определённого диапазона значений.
+ * Creates iterator for a specific range of values of original iterable value
  *
- * @param from Индекс начала диапазона. Элемент с этим индексом включается в диапазон.
- * @param to Индекс конца диапазона. Элемент с этим индексом не включается в диапазон.
- * @returns Функция, принимающая итерируемый объект и возвращающая итератор
+ * @example
+ *   from([1, 2, 3, 4, 5]).pipe(slice(1, 4)); // [2, 3, 4]
+ *
+ * @param from Range start index. An element with this index is included in the range.
+ * @param to Range end index. An element with this index is NOT included in the range.
+ * @returns Function which accepts the target collection and creates new iterable iterator
  */
 export function slice(from: number, to: number) {
   return <T>(iterable: Iterable<T>): IterableIterator<T> => {
@@ -38,11 +41,14 @@ export function slice(from: number, to: number) {
 }
 
 /**
- * Создаёт функцию, которая создаёт асинхронный итератор для определённого диапазона значений.
+ * Creates asynchronous iterator for a specific range of values of original iterable value
  *
- * @param from Индекс начала диапазона. Элемент с этим индексом включается в диапазон.
- * @param to Индекс конца диапазона. Элемент с этим индексом не включается в диапазон.
- * @returns Функция, принимающая итерируемый объект и возвращающая асинхронный итератор
+ * @example
+ *   new AsyncCollection([1, 2, 3, 4, 5]).pipe(sliceAsync(1, 4)); // Promise {[2, 3, 4]}
+ *
+ * @param from Range start index. An element with this index is included in the range.
+ * @param to Range end index. An element with this index is NOT included in the range.
+ * @returns Function which accepts the target collection and creates new asynchronous iterable iterator
  */
 export function sliceAsync(from: number, to: number) {
   return <T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {

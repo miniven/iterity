@@ -7,12 +7,15 @@ import {
 } from '../core';
 
 /**
- * Функция для преобразования значений исходного итератора в другие значения
+ * Calls passed callback function on each element of collection, and returns iterable that contains the results
  *
- * @param mapper Функция-преобразователь для значения
- * @returns Итератор
+ * @example
+ *   from([1, 2]).pipe(map((value) => value + 100)); // [101, 102]
+ *
+ * @param mapper Function to map original value to another value. Accepts current value and iterable collection.
+ * @returns Function which accepts the target collection and creates new iterable iterator
  */
-export function map<T, R>(mapper: (value: T) => R): (iterable: Iterable<T>) => IterableIterator<R> {
+export function map<T, R>(mapper: (value: T, iterable: Iterable<T>) => R) {
   return function (iterable: Iterable<T>): IterableIterator<R> {
     const iterator = getIterableIterator(iterable);
 
@@ -23,18 +26,22 @@ export function map<T, R>(mapper: (value: T) => R): (iterable: Iterable<T>) => I
         return next;
       }
 
-      return createIteratorYield(mapper(next.value));
+      return createIteratorYield(mapper(next.value, iterable));
     });
   };
 }
 
 /**
- * Функция для преобразования значений асинхронного итератора в другие значения
+ * Calls passed callback function on each element of asynchronous collection,
+ * and returns asynchronous iterable that contains the results
  *
- * @param mapper Функция-преобразователь для значения
- * @returns Асинхронный Итератор
+ * @example
+ *   new AsyncCollection([1, 2]).pipe(mapAsync((value) => value + 100)); // Promise {[101, 102]}
+ *
+ * @param mapper Function to map original value to another value. Accepts current value and iterable collection.
+ * @returns Function which accepts the target collection and creates new asyncronous iterable iterator
  */
-export function mapAsync<T, R>(mapper: (value: T) => R) {
+export function mapAsync<T, R>(mapper: (value: T, iterable: AsyncIterable<T>) => R) {
   return function (iterable: AsyncIterable<T>): AsyncIterableIterator<R> {
     const iterator = getAsyncIterableIterator(iterable);
 
@@ -45,7 +52,7 @@ export function mapAsync<T, R>(mapper: (value: T) => R) {
         return next;
       }
 
-      return createIteratorYield(mapper(next.value));
+      return createIteratorYield(mapper(next.value, iterable));
     });
   };
 }

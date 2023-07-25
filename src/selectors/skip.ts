@@ -7,10 +7,13 @@ import {
 } from '../core';
 
 /**
- * Возвращает функцию для создания итератора, пропускающего N первых элементов
+ * Creates iterator that skips first N elements of original iterable value
  *
- * @param amount Количество элементов, которые нужно пропустить
- * @returns Функция, принимающая итерируемый объект и возвращающая итератор
+ * @example
+ *   from([1, 2, 3, 4, 5]).pipe(skip(2)); // [3, 4, 5]
+ *
+ * @param amount Number of elements to skip
+ * @returns Function which accepts the target collection and creates new iterable iterator
  */
 export function skip(amount: number) {
   return <T>(iterable: Iterable<T>): IterableIterator<T> => {
@@ -34,10 +37,13 @@ export function skip(amount: number) {
 }
 
 /**
- * Возвращает функцию для создания асинхронного итератора, пропускающего N первых элементов
+ * Creates iterator that skips first N elements of original asynchronous iterable value
  *
- * @param amount Количество элементов, которые нужно пропустить
- * @returns Функция, принимающая асинхронный итерируемый объект и возвращающая асинхронный итератор
+ * @example
+ *   new AsyncCollection([1, 2, 3, 4, 5]).pipe(skipAsync(2)); // [3, 4, 5]
+ *
+ * @param amount Number of elements to skip
+ * @returns Function which accepts the target collection and creates new asynchronous iterable iterator
  */
 export function skipAsync(amount: number) {
   return <T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {

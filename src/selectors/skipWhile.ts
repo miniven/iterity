@@ -12,10 +12,16 @@ const enum State {
 }
 
 /**
- * Возвращает функцию для создания итератора, пропускающего первые элементы, пока соблюдается условие
+ * Creates iterator that skips first elements of the original iterable value while predicate returns true
  *
- * @param predicate Функция-предикат, которая возвращает true для элементов, которые должны быть пропущены
- * @returns Функция, принимающая итерируемый объект и возвращающая итератор
+ * @example
+ *   from([1, 2, 3, 4, 5]).pipe(skipWhile((value) => value < 3)); // [3, 4, 5]
+ *
+ * @example
+ *   from([100, 1, 2, 3, 4]).pipe(skipWhile((value) => value < 3)); // [100, 1, 2, 3, 4]
+ *
+ * @param predicate Predicate function
+ * @returns Function which accepts the target collection and creates new iterable iterator
  */
 export function skipWhile<T>(predicate: (value: T) => boolean) {
   return (iterable: Iterable<T>): IterableIterator<T> => {
@@ -41,10 +47,16 @@ export function skipWhile<T>(predicate: (value: T) => boolean) {
 }
 
 /**
- * Возвращает функцию для создания асинхронного итератора, пропускающего первые элементы, пока соблюдается условие
+ * Creates asynchronous iterator that skips first elements of the original iterable value while predicate returns true
  *
- * @param predicate Функция-предикат, которая возвращает true для элементов, которые должны быть пропущены
- * @returns Функция, принимающая асинхронный итерируемый объект и возвращающая асинхронный итератор
+ * @example
+ *   new AsyncCollection([1, 2, 3, 4, 5]).pipe(skipWhileAsync((value) => value < 3)); // Promise {[3, 4, 5]}
+ *
+ * @example
+ *   new AsyncCollection([100, 1, 2, 3, 4]).pipe(skipWhileAsync((value) => value < 3)); // Promise {[100, 1, 2, 3, 4]}
+ *
+ * @param predicate Predicate function
+ * @returns Function which accepts the target collection and creates new asynchronous iterable iterator
  */
 export function skipWhileAsync<T>(predicate: (value: T) => boolean) {
   return (iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {

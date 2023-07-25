@@ -1,10 +1,13 @@
 import { createIterableIterator, createIteratorReturn, getIterator } from '../core';
 
 /**
- * Создаёт итератор, который повторяет исходную коллекцию заданное количество раз. По умолчанию — бесконечно.
+ * Creates iterator that repeats the original collection a specified number of times. By default, it is infinite.
  *
- * @param times Количество повторений
- * @returns Функция, создающая итератор
+ * @example
+ *   from([1, 2, 3]).pipe(repeat(2)); // [1, 2, 3, 1, 2, 3]
+ *
+ * @param times Number of repeats
+ * @returns Function which accepts the target collection and creates new iterable iterator
  */
 export function repeat<T>(times: number = Infinity) {
   return function (iterable: Iterable<T>): IterableIterator<T> {

@@ -1,37 +1,49 @@
-import {
-  createAsyncIterableIterator,
-  createIterableIterator,
-  createIteratorReturn,
-  createIteratorYield,
-} from '../core';
+import { createIterableIterator, createIteratorReturn, createIteratorYield } from '../core';
 
 /**
- * Возвращает итератор для обхода массива в обратном порядке
+ * Returns iterator for walking through indexed value in reverse order
  *
- * @param array Массив элементов
- * @returns Итератор по элементам массива
+ * @param value Indexed iterable value, such as array or string
+ * @returns Iterable iterator
  */
-function arrayToReversed<T>(array: Array<T>): IterableIterator<T> {
-  let index = array.length - 1;
+function indexedToReversed<T>(value: Array<T>): IterableIterator<T>;
+function indexedToReversed<T>(value: string & Iterable<T>): IterableIterator<T>;
+function indexedToReversed<T>(value: Array<T> | (string & Iterable<T>)): IterableIterator<T> {
+  let index = value.length - 1;
 
   return createIterableIterator(function () {
     if (index < 0) {
       return createIteratorReturn();
     }
 
-    return createIteratorYield(array[index--]);
+    return createIteratorYield(value[index--] as T);
   });
 }
 
+function isIterableString(value: any): value is string {
+  return typeof value === 'string';
+}
+
 /**
- * Возвращает итератор для обхода переданной коллекции в обратном порядке.
+ * Returns iterator for walking through iterable value in reverse order
  *
- * @param iterable Перебираемая коллекция
- * @returns {IterableIterator} Итератор для обхода изначальной коллекции в обратном порядке
+ * @example
+ *   from([1, 2, 3]).pipe(reverse); // [3, 2, 1]å
+ *
+ * @param iterable Iterable value
+ * @returns {IterableIterator} Iterable iterator
  */
 export function reverse<T>(iterable: Iterable<T>): IterableIterator<T> {
   if (Array.isArray(iterable)) {
-    return arrayToReversed(iterable);
+    console.log('reverse on array');
+
+    return indexedToReversed(iterable);
+  }
+
+  if (isIterableString(iterable)) {
+    console.log('reverse on string');
+
+    return indexedToReversed(iterable);
   }
 
   const stack: T[] = [];

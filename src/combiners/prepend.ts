@@ -1,10 +1,14 @@
 import { sequence, sequenceAsync } from './sequence';
 
 /**
- * Создает итератор, который объединяет элементы переданных коллекций с элементами исходной итерируемой коллекции, при этом вставляя переданные коллекции перед исходной.
+ * Creates iterator that combines the elements of the passed collections with the elements of the target iterable collection,
+ * inserting the collections before the target collection.
  *
- * @params iterables Итерируемые коллекции
- * @returns Функция, создающая итератор
+ * @example
+ *   from([1, 2, 3]).pipe(prepend([-1, 0])); // [-1, 0, 1, 2]
+ *
+ * @param iterables Iterable collections
+ * @returns Function which accepts the target collection and creates new iterable iterator
  */
 export function prepend<T, R>(additional: Iterable<R>, ...iterables: Array<Iterable<R>>) {
   return function (iterable: Iterable<T>): IterableIterator<T | R> {
@@ -13,10 +17,17 @@ export function prepend<T, R>(additional: Iterable<R>, ...iterables: Array<Itera
 }
 
 /**
- * Создает асинхронный итератор, который объединяет элементы переданных коллекций с элементами исходной итерируемой коллекции, при этом вставляя переданные коллекции перед исходной.
+ * Creates asynchronous iterator that combines the elements of the passed asynchronous collections
+ * with the elements of the target asynchronous iterable collection, inserting the collections before the target collection.
  *
- * @params iterables Итерируемые коллекции
- * @returns Функция, создающая асинхронный итератор
+ * @example
+ *   const prevAsyncCollection = new AsyncCollection([-1, 0]);
+ *   const collection = new AsyncCollection([1, 2]).pipe(
+ *     prependAsync(prevAsyncCollection)
+ *   ); // [-1, 0, 1, 2]
+ *
+ * @param iterables Asynchronous iterable collections
+ * @returns Function which accepts the target collection and creates new asynchronous iterable iterator
  */
 export function prependAsync<T, R>(additional: AsyncIterable<R>, ...iterables: Array<AsyncIterable<R>>) {
   return function (iterable: AsyncIterable<T>): AsyncIterableIterator<T | R> {

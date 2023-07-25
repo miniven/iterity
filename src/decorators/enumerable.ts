@@ -13,11 +13,13 @@ const enum State {
 }
 
 /**
- * Добавляет индекс к каждому элементу итерируемой коллекции.
- * Создаёт асинхронный итератор, который возвращает пары [индекс, значение] для каждого элемента исходной коллекции.
+ * Creates an asynchronous iterator that returns pairs of [index, value] for each element of the original collection
  *
- * @param iterable Итерируемый объект
- * @returns Асинхронный итератор
+ * @example
+ *   new AsyncCollection(["bob", "mark", "ben"]).pipe(enumerableAsync); // Promise {[[0, "bob"], [1, "mark"], [2, "ben"]]}
+ *
+ * @param iterable Asynchronous iterable value
+ * @returns Asynchronous iterable iterator
  */
 export function enumerableAsync<T>(iterable: AsyncIterable<T>): AsyncIterableIterator<[number, T]> {
   const iterator = getAsyncIterableIterator(iterable);
@@ -39,11 +41,13 @@ export function enumerableAsync<T>(iterable: AsyncIterable<T>): AsyncIterableIte
 }
 
 /**
- * Добавляет индекс к каждому элементу итерируемой коллекции.
- * Создаёт итератор, который возвращает пары [индекс, значение] для каждого элемента исходной коллекции.
+ * Creates an iterator that returns pairs of [index, value] for each element of the original collection
  *
- * @param iterable Итерируемый объект
- * @returns Итератор
+ * @example
+ *   from(["bob", "mark", "ben"]).pipe(enumerable); // [[0, "bob"], [1, "mark"], [2, "ben"]]
+ *
+ * @param iterable Iterable value
+ * @returns Iterable iterator
  */
 export function enumerable<T>(iterable: Iterable<T>): IterableIterator<[number, T]> {
   const iterator = getIterableIterator(iterable);

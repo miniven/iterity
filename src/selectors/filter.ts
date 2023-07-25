@@ -1,10 +1,14 @@
 import { createAsyncIterableIterator, createIterableIterator, getAsyncIterableIterator, getIterator } from '../core';
 
 /**
- * Возвращает функцию для создания итератора по элементам, удовлетворяющим предикату
+ * Creates iterator for elements of the original iterable value,
+ * that meet the condition specified in a predicate function
  *
- * @param predicate Функция-предикат для проверки условия
- * @returns Функция, принимающая итерируемый объект и возвращающая итератор
+ * @example
+ *   from(["name", 4, "lastname", 7]).pipe(filter((value) => typeof value === "string")); // ["name", "lastname"]
+ *
+ * @param predicate Predicate function
+ * @returns Function which accepts the target collection and creates new iterable iterator
  */
 export function filter<T>(predicate: (value: T) => boolean) {
   return function (iterable: Iterable<T>): IterableIterator<T> {
@@ -27,10 +31,15 @@ export function filter<T>(predicate: (value: T) => boolean) {
 }
 
 /**
- * Возвращает функцию для создания асинхронного итератора по элементам, удовлетворяющим предикату
+ * Creates iterator for elements of the original asynchronous iterable value,
+ * that meet the condition specified in a predicate function
  *
- * @param predicate Функция-предикат для проверки условия
- * @returns Функция, принимающая итерируемый объект и возвращающая асинхронный итератор
+ * @example
+ *   new AsyncCollection(["name", 4, "lastname", 7])
+ *     .pipe(filterAsync((value) => typeof value === "string")); // Promise {["name", "lastname"]}
+ *
+ * @param predicate Predicate function
+ * @returns Function which accepts the target collection and creates new asynchronous iterable iterator
  */
 export function filterAsync<T>(predicate: (value: T) => boolean) {
   return function (iterable: AsyncIterable<T>): AsyncIterableIterator<T> {

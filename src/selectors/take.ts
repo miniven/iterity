@@ -7,10 +7,13 @@ import {
 } from '../core/helpers';
 
 /**
- * Функция для создания итератора для первых N элементов исходного итератора.
+ * Creates iterator that yields only first N elements of the original iterable value
  *
- * @param limit Количество первых элементов
- * @returns Функция, создающая итератор
+ * @example
+ *   from([1, 2, 3, 4]).pipe(take(2)); // [1, 2]
+ *
+ * @param limit Number of yields
+ * @returns Function which accepts the target collection and creates new iterable iterator
  */
 export function take(limit: number) {
   return <T>(iterable: Iterable<T>): IterableIterator<T> => {
@@ -31,10 +34,13 @@ export function take(limit: number) {
 }
 
 /**
- * Функция для создания асинхронного итератора для первых N элементов исходного итератора.
+ * Creates asyncronous iterator that yields only first N elements of the original iterable value
  *
- * @param limit Количество первых элементов
- * @returns Функция, создающая итератор
+ * @example
+ *   new AsyncCollection([1, 2, 3, 4]).pipe(takeAsync(2)); // Promise {[1, 2]}
+ *
+ * @param limit Number of yields
+ * @returns Function which accepts the target collection and creates new asyncronous iterable iterator
  */
 export function takeAsync(limit: number) {
   return <T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {
