@@ -1,6 +1,6 @@
 {
   "name": "iterity",
-  "version": "0.0.2-alpha",
+  "version": "0.1.0-alpha",
   "description": "Makes working with iterable collections easy and predictable",
   "homepage": "https://github.com/miniven/iterity/blob/main/README.md",
   "keywords": [
