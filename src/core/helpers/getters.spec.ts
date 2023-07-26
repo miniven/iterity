@@ -1,4 +1,4 @@
-import { randomAsyncGenerator } from '../../tests/helpers';
+import { randomAsyncGenerator } from '../../jest.helpers';
 import { getAsyncIterableIterator, getIterableIterator } from './getters';
 
 describe('core/helpers/getters', () => {

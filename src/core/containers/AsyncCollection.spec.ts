@@ -1,4 +1,4 @@
-import { lensToYieldDone, lensToYieldValue, randomAsyncGenerator, randomGenerator } from '../../tests/helpers';
+import { lensToYieldDone, lensToYieldValue, randomAsyncGenerator, randomGenerator } from '../../jest.helpers';
 import { enumerableAsync } from '../../decorators';
 import { takeAsync } from '../../selectors';
 import { AsyncCollection } from './AsyncCollection';

@@ -19,7 +19,7 @@
   "scripts": {
     "_clear": "rm -rf build",
     "_reinstall": "rm -rf node_modules && npm ci",
-    "test": "jest",
+    "test": "jest --verbose",
     "compile": "npm run _clear && tsc",
     "prepublishOnly": "npm run _reinstall && npm run compile"
   },

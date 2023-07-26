@@ -1,4 +1,4 @@
-import { randomAsyncGenerator } from '../../tests/helpers';
+import { randomAsyncGenerator } from '../../jest.helpers';
 import { enumerable } from '../../decorators';
 import { take } from '../../selectors';
 import { Collection } from './Collection';
