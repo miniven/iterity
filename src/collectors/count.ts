@@ -33,7 +33,7 @@ export function count<T>(iterable: Iterable<T>): number {
  * @param iterable Asynchronous iterable collection
  * @returns Promise with number of elements
  */
-export async function countAsync<T>(iterable: Iterable<T>): Promise<number> {
+export async function countAsync<T>(iterable: AsyncIterable<T>): Promise<number> {
   let counter = 0;
 
   for await (const _ of iterable) {

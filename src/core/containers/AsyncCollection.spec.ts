@@ -1,11 +1,9 @@
+import { lensToYieldDone, lensToYieldValue, randomAsyncGenerator, randomGenerator } from '../../tests/helpers';
 import { enumerableAsync } from '../../decorators';
 import { takeAsync } from '../../selectors';
 import { AsyncCollection } from './AsyncCollection';
 
-const lensToYieldValue = <T>(data: { value: T }) => data.value;
-const lensToYieldDone = (data: { done?: boolean }) => data.done;
-
-describe('AsyncCollection: base iterator', () => {
+describe('core/containers/AsyncCollection: base iterator', () => {
   /**
    * Примитивное значение внутри контейнера становится итерируемым
    */
@@ -47,7 +45,7 @@ describe('AsyncCollection: base iterator', () => {
   });
 });
 
-describe('AsyncCollection: pipe method', () => {
+describe('core/containers/AsyncCollection: pipe method', () => {
   /**
    * Метод pipe добавляет итератор поверх оригинального значения
    */
@@ -94,7 +92,7 @@ describe('AsyncCollection: pipe method', () => {
   });
 });
 
-describe('AsyncCollection: collect method', () => {
+describe('core/containers/AsyncCollection: collect method', () => {
   /**
    * Метод collect возвращает значение, возвращенное из функции, не трогая оригинальный экземпляр класса
    */
@@ -135,7 +133,7 @@ describe('AsyncCollection: collect method', () => {
   });
 });
 
-describe('AsyncCollection: switch method', () => {
+describe('core/containers/AsyncCollection: switch method', () => {
   /**
    * Возвращает новый экземпляр того же класса, не трогая оригинальный экземпляр
    */
@@ -179,7 +177,7 @@ describe('AsyncCollection: switch method', () => {
   });
 });
 
-describe('AsyncCollection: toDisposable method', () => {
+describe('core/containers/AsyncCollection: toDisposable method', () => {
   /**
    * Итератор коллекции по-умолчанию невозобновляемый
    */
@@ -227,7 +225,7 @@ describe('AsyncCollection: toDisposable method', () => {
   });
 });
 
-describe('AsyncCollection: toResumable method', () => {
+describe('core/containers/AsyncCollection: toResumable method', () => {
   /**
    * Коллекция остаётся возобновляемой при вызове toResumable
    */
@@ -252,7 +250,7 @@ describe('AsyncCollection: toResumable method', () => {
   });
 });
 
-describe('AsyncCollection: isResumable method', () => {
+describe('core/containers/AsyncCollection: isResumable method', () => {
   /**
    * Возвращает корректные значения после вызовов toDisposable и toResumable
    */
@@ -269,7 +267,7 @@ describe('AsyncCollection: isResumable method', () => {
   });
 });
 
-describe('AsyncCollection: toAsyncIterable static method', () => {
+describe('core/containers/AsyncCollection: toAsyncIterable static method', () => {
   /**
    * Возвращает итерируемое значение
    */
@@ -283,12 +281,6 @@ describe('AsyncCollection: toAsyncIterable static method', () => {
    * Возвращает итерируемое значение как оно было, если передано итерируемое
    */
   test('toAsyncIterable method returns iterable value as it is', () => {
-    async function* randomAsyncGenerator() {
-      while (true) {
-        yield Math.random();
-      }
-    }
-
     const iterable = AsyncCollection.toAsyncIterable(randomAsyncGenerator());
     const iterator = iterable[Symbol.asyncIterator]();
 
@@ -301,12 +293,6 @@ describe('AsyncCollection: toAsyncIterable static method', () => {
    * Обычный итератор преобразуется к асинхронному
    */
   test('toAsyncIterable method transform sync iterable to async', () => {
-    function* randomGenerator() {
-      while (true) {
-        yield Math.random();
-      }
-    }
-
     const randomIterator = randomGenerator();
     const randomAsyncIterable = AsyncCollection.toAsyncIterable(randomIterator);
     const iterator = randomAsyncIterable[Symbol.asyncIterator]();

@@ -1,6 +1,7 @@
+import { randomAsyncGenerator } from '../../tests/helpers';
 import { getAsyncIterableIterator, getIterableIterator } from './getters';
 
-describe('Getters helpers', () => {
+describe('core/helpers/getters', () => {
   test('getIterableIterator returns new iterable iterator', () => {
     const collection = [1, 2, 3];
     const iterator = getIterableIterator(collection);
@@ -11,13 +12,7 @@ describe('Getters helpers', () => {
   });
 
   test('getAsyncIterableIterator returns new async iterable iterator', () => {
-    async function* asyncRandomGenerator() {
-      while (true) {
-        yield Math.random();
-      }
-    }
-
-    const iterator = getAsyncIterableIterator(asyncRandomGenerator());
+    const iterator = getAsyncIterableIterator(randomAsyncGenerator());
 
     expect(iterator).toHaveProperty([Symbol.asyncIterator]);
     expect(iterator).toHaveProperty('next');

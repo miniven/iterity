@@ -1,8 +1,9 @@
+import { randomAsyncGenerator } from '../../tests/helpers';
 import { enumerable } from '../../decorators';
 import { take } from '../../selectors';
 import { Collection } from './Collection';
 
-describe('Collection: base iterator', () => {
+describe('core/containers/Collection: base iterator', () => {
   /**
    * Примитивное значение внутри контейнера становится итерируемым
    */
@@ -41,7 +42,7 @@ describe('Collection: base iterator', () => {
   });
 });
 
-describe('Collection: pipe method', () => {
+describe('core/containers/Collection: pipe method', () => {
   /**
    * Метод pipe добавляет итератор поверх оригинального значения
    */
@@ -88,7 +89,7 @@ describe('Collection: pipe method', () => {
   });
 });
 
-describe('Collection: collect method', () => {
+describe('core/containers/Collection: collect method', () => {
   /**
    * Метод collect возвращает значение, возвращенное из функции, не трогая оригинальный экземпляр класса
    */
@@ -128,7 +129,7 @@ describe('Collection: collect method', () => {
   });
 });
 
-describe('Collection: switch method', () => {
+describe('core/containers/Collection: switch method', () => {
   /**
    * Возвращает новый экземпляр того же класса, не трогая оригинальный экземпляр
    */
@@ -172,7 +173,7 @@ describe('Collection: switch method', () => {
   });
 });
 
-describe('Collection: toDisposable method', () => {
+describe('core/containers/Collection: toDisposable method', () => {
   /**
    * Итератор коллекции по-умолчанию невозобновляемый
    */
@@ -220,7 +221,7 @@ describe('Collection: toDisposable method', () => {
   });
 });
 
-describe('Collection: toResumable method', () => {
+describe('core/containers/Collection: toResumable method', () => {
   /**
    * Коллекция остаётся возобновляемой при вызове toResumable
    */
@@ -245,7 +246,7 @@ describe('Collection: toResumable method', () => {
   });
 });
 
-describe('Collection: isResumable method', () => {
+describe('core/containers/Collection: isResumable method', () => {
   /**
    * Возвращает корректные значения после вызовов toDisposable и toResumable
    */
@@ -262,7 +263,7 @@ describe('Collection: isResumable method', () => {
   });
 });
 
-describe('Collection: toIterable static method', () => {
+describe('core/containers/Collection: toIterable static method', () => {
   /**
    * Возвращает итерируемое значение
    */
@@ -289,13 +290,7 @@ describe('Collection: toIterable static method', () => {
    * Асинхронный итератор не имеет метода [Symbol.iterator], поэтому будет завёрнут в контейнер, как и примитив
    */
   test("toIterable method doesn't consider async iterator as iterable", () => {
-    async function* numGenerator() {
-      while (true) {
-        yield Math.random();
-      }
-    }
-
-    const asyncIterator = numGenerator();
+    const asyncIterator = randomAsyncGenerator();
     const iterable = Collection.toIterable(asyncIterator);
     const iterator = iterable[Symbol.iterator]();
 

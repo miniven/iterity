@@ -1,18 +1,12 @@
+import { randomAsyncGenerator, randomGenerator } from '../../tests/helpers';
 import { isAsyncIterable, isIterable } from './guards';
 
-describe('Guards helpers', () => {
+describe('core/helpers/guards', () => {
   test('isIterable returns true for iterable values', () => {
     expect(isIterable(['1', '2', '3'])).toBeTruthy();
     expect(isIterable('123')).toBeTruthy();
     expect(isIterable(new Set())).toBeTruthy();
     expect(isIterable(new Map())).toBeTruthy();
-
-    function* randomGenerator() {
-      while (true) {
-        yield Math.random();
-      }
-    }
-
     expect(isIterable(randomGenerator())).toBeTruthy();
   });
 
@@ -24,13 +18,7 @@ describe('Guards helpers', () => {
   });
 
   test('isAsyncIterable returns true for iterable values', () => {
-    async function* asyncRandomGenerator() {
-      while (true) {
-        yield Math.random();
-      }
-    }
-
-    expect(isAsyncIterable(asyncRandomGenerator())).toBeTruthy();
+    expect(isAsyncIterable(randomAsyncGenerator())).toBeTruthy();
   });
 
   test('isAsyncIterable returns false for non iterable values', async () => {

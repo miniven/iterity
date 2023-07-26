@@ -1,7 +1,7 @@
 import { AsyncCollection } from '../containers/AsyncCollection';
 import { forEach, forEachAsync } from './iterators';
 
-describe('Iterators helpers', () => {
+describe('core/helpers/iterators', () => {
   test('forEach calls for every value of iterable collection', () => {
     const collection = new Set(['one', 'two', 'three']);
     const callback = jest.fn();

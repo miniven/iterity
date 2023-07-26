@@ -19,7 +19,7 @@ export function average(iterable: Iterable<number>): number {
     count++;
   }
 
-  return sum / count;
+  return count ? sum / count : sum;
 }
 
 /**
@@ -44,5 +44,5 @@ export async function averageAsync(iterable: AsyncIterable<number>): Promise<num
     count++;
   }
 
-  return sum / count;
+  return count ? sum / count : sum;
 }
