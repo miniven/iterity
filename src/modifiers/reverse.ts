@@ -35,14 +35,10 @@ function isIterableString(value: any): value is string {
  */
 export function reverse<T>(iterable: Iterable<T>): IterableIterator<T> {
   if (Array.isArray(iterable)) {
-    console.log('reverse on array');
-
     return indexedToReversed(iterable);
   }
 
   if (isIterableString(iterable)) {
-    console.log('reverse on string');
-
     return indexedToReversed(iterable);
   }
 
