@@ -1,12 +1,14 @@
 # Iterity
 
-Iterity — библиотека для удобной и предсказуемой работы с итерируемыми структурами данных.
+Iterity is a library for easy and predictable work with iterable data structures.
 
-## 🧗‍♂️ Мотивация
+[Russian version | Версия на русском 🧶](./README.rus.md)
 
-Итераторы являются универсальным интерфейсом для работы с различными типами коллекций и позволяют абстрагироваться от конкретных структур данных при обходе коллекций.
+## 🧗‍♂️ Motivation
 
-Используя итераторы мы можем применять несколько преобразований к коллекции за одну итерацию. Посмотрим на примере. В следующем фрагменте представлена работа с массивом через его методы:
+Iterators are a universal interface for working with various types of collections. It allows us to iterate through collections without thinking of specific data structures.
+
+With iterators, we can apply multiple transformations to a collection in one iteration. Let's look at an example. The following code shows work with an array and its methods:
 
 ```ts
 const isActive = (sign) => sign.isActive;
@@ -15,7 +17,7 @@ const mapStateToStatus = (sign) => statuses[sign.state];
 const uniqueStatuses = signatures.filter(isActive).map(mapStateToStatus);
 ```
 
-Методы `filter` и `map` обходят массив и возвращают новый массив. А вот как эта задача решается при помощи итераторов и библиотеки Iterity:
+The `filter` and `map` methods iterates through the original array and return a new array. Here's how this problem can be solved using iterators and the Iterity library:
 
 ```ts
 const uniqueStatuses = from(signatures).pipe(
@@ -24,44 +26,44 @@ const uniqueStatuses = from(signatures).pipe(
 );
 ```
 
-Код остаётся простым и декларативным, но при этом мы получили ряд преимуществ:
+The code remains simple and declarative, but at the same time we got a number of advantages:
 
-1. Коллекция `signatures` не обязана быть массивом: мы могли бы использовать `Set`, `LinkedList`, `BST` или любую другую структуру, которая реализует метод `[Symbol.iterator]`.
-2. Преобразования будут применены тогда, когда они потребуются, то есть при переборе коллекции. До тех пор не будет выполнено ни одной итерации.
-3. Если обход коллекции будет прерван, например, через `break`, то преобразования к оставшимся элементам не применяются.
-4. Есть возможность использовать бесконечную последовательность.
+1. The `signatures` collection does not have to be an array: we could use `Set`, `LinkedList`, `BST` or any other data structure that implements the `[Symbol.iterator]` method.
+2. Transformations will be applied only when they are needed, that is, when we start iterate through collection.
+3. If the collection iteration is interrupted, for example, with `break` statement, then transformations are not applied to the remaining elements.
+4. It is possible to use an infinite collection.
 
-## 💡 Идеология
+## 💡 Ideology
 
-API библиотеки Iterity вдохновлен библиотекой RxJS. Iterity предоставляет контейнеры для работы с итерируемыми объектами, а так же функции для их трансформации.
+The Iterity library API is inspired by the RxJS library. Iterity provides containers for working with iterable objects, as well as functions for their transformation.
 
-Iterity разделяет коллекции на синхронные и асинхронные. Синхронные коллекции имеют метод `Symbol.iterator`, а асинхронные — `Symbol.asyncIterator`. Кроме того, каждая коллекция может быть возобновляемой, то есть, если обход коллекции с использованием итератора был прерван вызовом `break`, то в дальнейшем его можно будет продолжить.
+Iterity divides collections into synchronous and asynchronous. Synchronous collections have the `Symbol.iterator` method, and asynchronous collections have the `Symbol.AsyncIterator` method. In addition, each collection can be resumed: if iteration was interrupted by the `break` statement, then it can be continued in the future.
 
-Iterity предоставляет два контейнера — `Collection` и `AsyncCollection`. По-умолчанию итераторы обоих контейнеров невозобновляемы. Оба контейнера предоставляют методы:
+Iterity provides two containers — `Collection` and `AsyncCollection`. By default, the iterators of both containers are disposable. Both containers provide methods:
 
-1. `pipe` для создания композиции итераторов.
-2. `collect` для преобразования контейнера к произвольному типу: `number | string | boolean | []` и т.д. Метод, закономерно, вызывает перебор коллекции.
-3. `switch` для изменения типа контейнера, например с `AsyncCollection` на `Collection`.
-4. `toResumable` для приведения итератора к возобновляемому типу.
-5. `toDisposable` для итератора к невозобновляемому типу.
+1. `pipe` to create a composition of iterators.
+2. `collect` to convert the container to an arbitrary type: `number | string | boolean | []`, etc. This method, naturally, causes a collection iteration.
+3. `switch` to change the container type, for example from `AsyncCollection` to `Collection`.
+4. `toResumable` to cast the iterator to resumable type.
+5. `toDisposable` to cast the iterator to disposable type.
 
-Метод `pipe` — сердце контейнера. Он позволяет составить композицию функций, которые определяют поведение итератора. С его помощью легко описать цепочку преобразований и предсказать, с какими значениями мы будем иметь дело при обходе коллекции.
+The `pipe` method is the heart of the container. It allows us to create a composition of functions that determine the behavior of the iterator. With its help, it is easy to describe the chain of transformations and predict what values we will deal with.
 
-## 🥁 Установка и использование
+## 🥁 Installation and usage
 
-Через NPM:
+Using NPM:
 
 ```bash
 npm install --save iterity
 ```
 
-Через Yarn:
+Using Yarn:
 
 ```bash
 yarn add iterity
 ```
 
-Использование:
+Basic usage:
 
 ```ts
 import { from, tap } from 'iterity';
@@ -69,93 +71,93 @@ import { from, tap } from 'iterity';
 const collection = from([1, 2, 3]).pipe(tap((value) => console.log(value)));
 ```
 
-## 🌚 Вместо документации
+## 🌚 Kind of documentation
 
 ### [Collection](#collection)
 
-Класс `Collection` — контейнер для значения, с которым нужно работать как с синхронной итерируемой коллекцией. Реализует интерфейс `Iterable`.
+The `Collection` class is a container for a value to work with as a synchronous iterable collection. It implements the `Iterable` interface.
 
-Класс `Collection` принимает любое значение в своём конструкторе. Если это значение уже реализует интерфейс `Iterable` (является массивом, строкой, Set'ом и т.д.), то оно помещается в контейнер без изменений и итерация будет происходить по его элементам.
+The `Collection` class accepts any value in its constructor. If this value already implements the `Iterable` interface (it is an array, string, Set, etc.), then it will be put in the container as it is.
 
-Если передано неитерируемое значение, то для него будет создан итератор, который перебирает только переданное значение.
+If passed value is is not iterable, the class will create an iterator for it, which iterates over only the passed value.
 
-Создание экземпляра класса:
+Creating an instance:
 
 ```ts
 const collection = new Collection(1);
 ```
 
-#### [Методы](#collection_methods)
+#### [Methods](#collection_methods)
 
-1. Статический метод `toIterable` приводит переданное значение к итерируемому типу, если оно таким не является изначально.
+1. The static `toIterable` method transforms the passed value to iterable type, if it is needed.
 
    ```ts
    toIterable<T>(value: Iterable<T> | T): Iterable<T>;
    ```
 
-2. Метод `pipe` принимает функции для преобразования итератора, а возвращает новый экземпляр класса `Collection`, но уже с новым значением. Каждая функция, переданная в `pipe`, принимает `Iterable` и должна возвращать `Iterable`.
+2. The `pipe` method takes functions to transform the iterator, and returns a new instance of the `Collection` with a new value. Each function passed to `pipe` accepts `Iterable` and should return `Iterable`:
 
    ```ts
    operation<T, R>(iterable: Iterable<T>): IterableIterator<R>;
    ```
 
-   Первая функция, переданная в `pipe`, получает итератор значения, хранящегося в контейнере.
+   The first function passed to `pipe` gets an iterator of the value stored in the container.
 
-3. Метод `collect` преобразует контейнер к произвольному типу. Он принимает функцию, называемую «коллектор», которая принимает `Iterable` и возвращает любое значение. Результатом вызова метода `collect` будет значение, возвращенное коллектором.
+3. The `collect` method converts the container to an arbitrary type. It takes a function called «collector», which takes an `Iterable` and returns any value. The result returned by collector will be returned by `collect` method.
 
    ```ts
    collect<R>(collector: (iterable: Iterable<T>) => R): R;
    ```
 
-   Этот метод используется в таких случаях, как расчёт произведения всех чисел коллекции, объединения всех элементов коллекции в одну строку и т.д.
+   This method is used in such cases as calculating the product of all the numbers in the collection, combining all the elements of the collection into a string, and so on.
 
-4. Метод `switch` предназначен для изменения типа контейнера, например с `AsyncCollection` на `Collection`. Если переданная методу функция возвращает контейнер `Collection` или `AsyncCollection`, то он возвращает этот контейнер. В противном случае возвращается экземпляр того же класса, но с новым значением.
+4. The `switch` method is designed to change the container type, for example from `AsyncCollection` to `Collection`. If the function passed to the method returns a `Collection` or `AsyncCollection` instance, then method returns this instance. Otherwise, new instance of the same class with new value will be returned.
 
    ```ts
    switch(switcher: (value: Iterable<T> | T) => T | Iterable<T> | AbstractCollection<T>): AbstractCollection<T>;
    ```
 
-5. Методы `toResumable` и `toDisposable` позволяют управлять «возобновляемостью» итератора. Метод `toResumable` позволяет прервать перебор коллекции, но позже возобновить с той же позиции. `toDisposable` делает противоположное. Оба метода возвращают тот же экземпляр класса, в контексте которого вызваны. **⚠️ По-умолчанию все коллекции невозобновляемы.**
+5. The `toResumable` and `toDisposable` methods allow us to control the iterator's possibility of being continued. The `toResumable` method allows us to break the collection iteration, but resume it later from the same position. `toDisposable` does the opposite. Both methods return the same instance. **⚠️ By default, all collections are disposable.**
 
 ### [AsyncCollection](#async_collection)
 
-Класс `AsyncCollection` — контейнер для значения, с которым нужно работать как с асинхронной итерируемой коллекцией. Реализует интерфейс `AsyncIterable`.
+The `AsyncCollection` class is a container for a value to work with as an asynchronous iterable collection. It implements the`AsyncIterable` interface.
 
-Создание экземпляра класса:
+Creating an instance:
 
 ```ts
 const collection = new AsyncCollection(1);
 ```
 
-Интерфейс и логика работы `AsyncCollection` аналогичны классу `Collection`, но есть несколько исключений:
+The interface and logic of `AsyncCollection` are similar to the `Collection` class, but there are a few exceptions:
 
-1. Если в `AsyncCollection` передан итерируемый объект, имеющий синхронный итератор, то `AsyncCollection` преобразует его в асинхронный.
+1. If the constructor of `AsyncCollection` gets iterable object with synchronous iterator, then `AsyncCollection` transforms it to asynchronous.
 
-2. Вместо статического метода `toIterable` класс `AsyncCollection` предоставляет статический метод `toAsyncIterable`, который приводит переданное значение к асинхронному итерируемому типу, если оно таким не является изначально. В том числе умеет приводить синхронный итератор к асинхронному.
+2. Instead of the static `toIterable` method, the `AsyncCollection` class provides a static `toAsyncIterable` method, which casts the passed value to an asynchronous iterable type, if it is needed. It is able to transform a synchronous iterator to an asynchronous one.
 
    ```ts
    toAsyncIterable<T>(value: AsyncIterable<T> | Iterable<T> | T): AsyncIterable<T>;
    ```
 
-Все остальные методы работают аналогично методам класса `Collection`, но с поправкой на асинхронность. Функции для работы с асинхронными коллекциями принято именовать с постфиксом `Async`, например: `mapAsync`, `takeAsync`, `filterAsync`.
+Other methods work similarly to the methods of the `Collection` class, but synchronously. Functions for working with asynchronous collections are usually named with the postfix `Async`, for example: `mapAsync`, `takeAsync`, `filterAsync`.
 
-### [Функции](#functions)
+### [Functions](#functions)
 
-Iterity предоставляет наборы функций для работы с итерируемыми коллекциями. Условно, функции разделены на группы по целям их применения.
+Iterity provides sets of functions for working with iterable collections. The functions are divided into groups according to the purposes of their application.
 
-1. [Коллекторы (collectors)](./src/collectors/). Предназначены для приведения коллекции к типу, отличному от контейнерного. Пример: получить среднее арифметическое всех чисел коллекции. Используются с методом `collect`.
-2. [Селекторы (selectors)](./src/selectors/). Предназначены для выбора определенных значений из коллекции. Примеры: получить итератор для первых 10 элементов коллекции, отфильтровать элементы коллекции. Используются с методом `pipe`.
-3. [Модификаторы (modifiers)](./src/modifiers/). Предназначены для изменения коллекций. Пример: преобразовать каждое значение коллекции в другое значение. Используются с методом `pipe`.
-4. [Декораторы (decorators)](./src/decorators/). Предназначены для добавления определенной функциональности, или данных к существующей коллекции. Примеры: добавить каждому элементу его порядковый номер, добавить функцию, которая будет вызвана для каждого элемента при обходе коллекции. Используются с методом `pipe`.
-5. [Комбинаторы (combiners)](./src/combiners/). Предназначены для объединения нескольких коллекций в одну. Используются с методом `pipe`.
+1. [collectors](./src/collectors/). Designed to transform the collection to an arbitrary type. Example: get the average of all the numbers in the collection. Used with the `collect` method.
+2. [Selectors](./src/selectors/). Designed to select specific values from a collection. Examples: get an iterator for the first 10 elements of the collection, filter the elements of the collection. Used with the `pipe` method.
+3. [Modifiers](./src/modifiers/). Designed to modify collections. Example: Map each value of a collection to a different value. Used with the `pipe` method.
+4. [Decorators](./src/decorators/). Designed to add specific functionality, or data to an existing collection. Examples: add index to each element, add a function that will be called for each element. Used with the `pipe` method.
+5. [Combiners](./src/combiners/). Designed to combine multiple collections into one. Used with the `pipe` method.
 
-Так же Iterity предоставляет набор [функций-хелперов](./src/core/helpers/).
+Iterity also provides a set of [helper functions](./src/core/helpers/).
 
-😮 А еще вы можете написать такие функции самостоятельно! Ничто не мешает написать нужный модификатор и передать его в метод `pipe`, так же как и любой коллектор для метода `collect`.
+😮 You can also write functions like these by yourself! Nothing prevents you from writing the necessary modifier and passing it to the `pipe` method, just like any collector for the `collect` method.
 
-## 🍄 Примеры
+## 🍄 Examples
 
-#### Пример 1: Создание простейшей коллекции из примитивного значения:
+#### Example 1: Creating the simplest collection from a primitive value:
 
 ```ts
 const collection = new Collection(1);
@@ -165,9 +167,9 @@ for (const number of collection) {
 }
 ```
 
-#### Пример 2: Создание коллекции из 10 псевдослучайных чисел.
+#### Example 2: Creating a 10 random numbers collection.
 
-Вспомогательная функция `from` получает любое значение и возвращает экземпляр контейнера `Collection`, или `AsyncCollection`.
+The helper function `from` gets any value and returns an instance of the container `Collection`, or `AsyncCollection`.
 
 ```ts
 import { from, take } from 'iterity';
@@ -186,7 +188,7 @@ for (const number of collection) {
 }
 ```
 
-#### Пример 3: Создание асинхронной коллекции из 10 псевдослучайных чисел:
+#### Example 3: Creating a 10 random numbers asynchronous collection:
 
 ```ts
 import { from, take } from 'iterity';
@@ -203,21 +205,21 @@ for await (const number of asyncCollection) {
 }
 ```
 
-#### Пример 4: Работа со строками
+#### Example 4: Strings as iterable collections
 
-Так тоже можно, потому что строки в JavaScript тоже являются итерируемыми коллекциями. Метод `collect` приводит коллекцию к произвольному значению, в данном случае к строке:
+Strings in JavaScript are also iterable collections, so we can work with them this way. The `collect` method transforms the collection to an arbitrary value, in this case to a string:
 
 ```ts
 import { from, map, join } from 'iterity';
 
 const uppercaseSeq = from('abcdef')
   .pipe(map((letter: string) => letter.toUpperCase()))
-  .collect(join('')); // Метод collect производит обход коллекции
+  .collect(join(''));
 
 console.log(uppercaseSeq); // ABCDEF
 ```
 
-#### Пример 5: Обработка событий с использованием асинхронного итератора:
+#### Example 5: Event handling with asynchronous iterator:
 
 ```ts
 import { from, mapAsync, enumerableAsync } from 'iterity';
