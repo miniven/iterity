@@ -2,7 +2,7 @@
   "name": "iterity",
   "version": "0.1.0-alpha",
   "description": "Makes working with iterable collections easy and predictable",
-  "homepage": "https://github.com/miniven/iterity/blob/main/README.md",
+  "homepage": "https://github.com/miniven/iterity/#readme",
   "keywords": [
     "iterator",
     "asynciterator",
@@ -32,6 +32,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/miniven/iterity.git"
+  },
+  "bugs": {
+    "url": "https://github.com/miniven/iterity/issues"
   },
   "devDependencies": {
     "@types/jest": "^29.5.3",
