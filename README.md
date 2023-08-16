@@ -145,7 +145,7 @@ Other methods work similarly to the methods of the `Collection` class, but synch
 
 Iterity provides sets of functions for working with iterable collections. The functions are divided into groups according to the purposes of their application.
 
-1. [collectors](./src/collectors/). Designed to transform the collection to an arbitrary type. Example: get the average of all the numbers in the collection. Used with the `collect` method.
+1. [Collectors](./src/collectors/). Designed to transform the collection to an arbitrary type. Example: get the average of all the numbers in the collection. Used with the `collect` method.
 2. [Selectors](./src/selectors/). Designed to select specific values from a collection. Examples: get an iterator for the first 10 elements of the collection, filter the elements of the collection. Used with the `pipe` method.
 3. [Modifiers](./src/modifiers/). Designed to modify collections. Example: Map each value of a collection to a different value. Used with the `pipe` method.
 4. [Decorators](./src/decorators/). Designed to add specific functionality, or data to an existing collection. Examples: add index to each element, add a function that will be called for each element. Used with the `pipe` method.
@@ -191,14 +191,14 @@ for (const number of collection) {
 #### Example 3: Creating a 10 random numbers asynchronous collection:
 
 ```ts
-import { from, take } from 'iterity';
+import { from, takeAsync } from 'iterity';
 
 async function* asyncRandomGenerator(min = 0, max = 1) {
   ...
 }
 
 const random = asyncRandomGenerator(5, 10);
-const asyncCollection = from(random).pipe(take(10));
+const asyncCollection = from(random).pipe(takeAsync(10));
 
 for await (const number of asyncCollection) {
   console.log(number);

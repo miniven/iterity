@@ -191,14 +191,14 @@ for (const number of collection) {
 #### Пример 3: Создание асинхронной коллекции из 10 псевдослучайных чисел:
 
 ```ts
-import { from, take } from 'iterity';
+import { from, takeAsync } from 'iterity';
 
 async function* asyncRandomGenerator(min = 0, max = 1) {
   ...
 }
 
 const random = asyncRandomGenerator(5, 10);
-const asyncCollection = from(random).pipe(take(10));
+const asyncCollection = from(random).pipe(takeAsync(10));
 
 for await (const number of asyncCollection) {
   console.log(number);
