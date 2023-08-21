@@ -1,3 +1,4 @@
+import { Reversible } from '../../core';
 import { reverse } from './reverse';
 
 describe('modifiers/reverse', () => {
@@ -18,7 +19,7 @@ describe('modifiers/reverse', () => {
     expect(iteratorFunctionMock).not.toBeCalled();
   });
 
-  test('reverse function creates iterator effectively for array', () => {
+  test('reverse function creates iterator effectively for string', () => {
     const iteratorFunctionMock = jest.spyOn(String.prototype, Symbol.iterator);
 
     const collection = reverse('123');
@@ -42,5 +43,21 @@ describe('modifiers/reverse', () => {
     expect(iterator.next().value).toBe('1');
     expect(iterator.next().done).toBeTruthy();
     expect(iteratorFunctionMock).toBeCalled();
+  });
+
+  test('reverse function creates iterator for `Reversible` instance', () => {
+    const collection = new Reversible(
+      [1, 2, 3],
+      () => 3,
+      (index, iterable) => iterable[index]
+    );
+
+    const reversed = reverse(collection);
+    const iterator = reversed[Symbol.iterator]();
+
+    expect(iterator.next().value).toBe(3);
+    expect(iterator.next().value).toBe(2);
+    expect(iterator.next().value).toBe(1);
+    expect(iterator.next().done).toBeTruthy();
   });
 });

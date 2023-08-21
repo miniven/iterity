@@ -1,4 +1,4 @@
-import { createIterableIterator, createIteratorReturn, createIteratorYield } from '../../core';
+import { createIterableIterator, createIteratorReturn, createIteratorYield, Reversible } from '../../core';
 
 /**
  * Returns iterator for walking through indexed value in reverse order
@@ -33,7 +33,11 @@ function isIterableString(value: any): value is string {
  * @param iterable Iterable value
  * @returns {IterableIterator} Iterable iterator
  */
-export function reverse<T>(iterable: Iterable<T>): IterableIterator<T> {
+export function reverse<T>(iterable: Iterable<T>): Iterable<T> {
+  if (iterable instanceof Reversible) {
+    return iterable.reverse();
+  }
+
   if (Array.isArray(iterable)) {
     return indexedToReversed(iterable);
   }
