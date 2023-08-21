@@ -242,7 +242,25 @@ const uppercaseSeq = from('abcdef')
 console.log(uppercaseSeq); // ABCDEF
 ```
 
-#### Пример 5: Обработка событий с использованием асинхронного итератора:
+#### Пример 5: Работа с реверсивным итерируемым объектом:
+
+Для создания реверсивного перебираемого объекта используется класс `Reversible`.
+
+```ts
+import { Reversible, from, reverse } from 'iterity';
+
+const collection = from(
+  new Reversible(
+    [1, 2, 3],
+    (iterable) => iterable.length,
+    (index, iterable) => iterable[index]
+  )
+).pipe(reverse);
+
+console.log([...collection]); // [3, 2, 1]
+```
+
+#### Пример 6: Обработка событий с использованием асинхронного итератора:
 
 ```ts
 import { from, mapAsync, enumerableAsync } from 'iterity';

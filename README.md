@@ -242,7 +242,25 @@ const uppercaseSeq = from('abcdef')
 console.log(uppercaseSeq); // ABCDEF
 ```
 
-#### Example 5: Event handling with asynchronous iterator:
+#### Example 5: Reverse a reversible collection:
+
+The `Reversible` class is used to create a collection which can be traversed in reverse order in efficient way.
+
+```ts
+import { Reversible, from, reverse } from 'iterity';
+
+const collection = from(
+  new Reversible(
+    [1, 2, 3],
+    (iterable) => iterable.length,
+    (index, iterable) => iterable[index]
+  )
+).pipe(reverse);
+
+console.log([...collection]); // [3, 2, 1]
+```
+
+#### Example 6: Event handling with asynchronous iterator:
 
 ```ts
 import { from, mapAsync, enumerableAsync } from 'iterity';
