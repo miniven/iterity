@@ -49,6 +49,8 @@ Iterity provides two containers — `Collection` and `AsyncCollection`. By defau
 
 The `pipe` method is the heart of the container. It allows us to create a composition of functions that determine the behavior of the iterator. With its help, it is easy to describe the chain of transformations and predict what values we will deal with.
 
+The `Reversible` class is a container for an iterator that can be iterated in reverse order.
+
 ## 🥁 Installation and usage
 
 Using NPM:
@@ -141,11 +143,32 @@ The interface and logic of `AsyncCollection` are similar to the `Collection` cla
 
 Other methods work similarly to the methods of the `Collection` class, but synchronously. Functions for working with asynchronous collections are usually named with the postfix `Async`, for example: `mapAsync`, `takeAsync`, `filterAsync`.
 
+### [Reversible](#reversible_collection)
+
+The `Reversible` class is designed to contain an iterator that can be iterated in reverse order. It implements the `Iterable` interface.
+
+It is assumed that an instance of `Reversible` knows how to efficiently iterate over a collection in reverse order, as the developer specifies this behavior during creation.
+
+To achieve this, the class constructor provides two API options:
+
+1. Provide a function that immediately returns a reversed iterator. In this case, the same iterator returned by the provided function will be used.
+2. Provide two functions, where the first returns the length of the collection, and the second defines how to get a value from the collection at a specific index. In this case, a new iterator will be returned, which sequentially calls the `getItem` function for all indices, starting from the value returned by `getLength` down to 0.
+
+#### [Methods](#reversible_methods)
+
+1. The `reverse` method sets the iterator instance to iterate over elements in reverse order. It returns the current `Reversible` instance.
+
+   ```ts
+   reverse(): Reversible<T>;
+   ```
+
+⚠️ The `reverse` modifier function can work with instances of the `Reversible` class. It calls the `reverse` method on the provided object if it is an instance of this class.
+
 ### [Functions](#functions)
 
 Iterity provides sets of functions for working with iterable collections. The functions are divided into groups according to the purposes of their application.
 
-1. [collectors](./src/collectors/). Designed to transform the collection to an arbitrary type. Example: get the average of all the numbers in the collection. Used with the `collect` method.
+1. [Collectors](./src/collectors/). Designed to transform the collection to an arbitrary type. Example: get the average of all the numbers in the collection. Used with the `collect` method.
 2. [Selectors](./src/selectors/). Designed to select specific values from a collection. Examples: get an iterator for the first 10 elements of the collection, filter the elements of the collection. Used with the `pipe` method.
 3. [Modifiers](./src/modifiers/). Designed to modify collections. Example: Map each value of a collection to a different value. Used with the `pipe` method.
 4. [Decorators](./src/decorators/). Designed to add specific functionality, or data to an existing collection. Examples: add index to each element, add a function that will be called for each element. Used with the `pipe` method.
@@ -191,14 +214,14 @@ for (const number of collection) {
 #### Example 3: Creating a 10 random numbers asynchronous collection:
 
 ```ts
-import { from, take } from 'iterity';
+import { from, takeAsync } from 'iterity';
 
 async function* asyncRandomGenerator(min = 0, max = 1) {
   ...
 }
 
 const random = asyncRandomGenerator(5, 10);
-const asyncCollection = from(random).pipe(take(10));
+const asyncCollection = from(random).pipe(takeAsync(10));
 
 for await (const number of asyncCollection) {
   console.log(number);
@@ -219,7 +242,25 @@ const uppercaseSeq = from('abcdef')
 console.log(uppercaseSeq); // ABCDEF
 ```
 
-#### Example 5: Event handling with asynchronous iterator:
+#### Example 5: Reverse a reversible collection:
+
+The `Reversible` class is used to create a collection which can be traversed in reverse order in efficient way.
+
+```ts
+import { Reversible, from, reverse } from 'iterity';
+
+const collection = from(
+  new Reversible(
+    [1, 2, 3],
+    (iterable) => iterable.length,
+    (index, iterable) => iterable[index]
+  )
+).pipe(reverse);
+
+console.log([...collection]); // [3, 2, 1]
+```
+
+#### Example 6: Event handling with asynchronous iterator:
 
 ```ts
 import { from, mapAsync, enumerableAsync } from 'iterity';
