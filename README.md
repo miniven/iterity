@@ -49,6 +49,8 @@ Iterity provides two containers — `Collection` and `AsyncCollection`. By defau
 
 The `pipe` method is the heart of the container. It allows us to create a composition of functions that determine the behavior of the iterator. With its help, it is easy to describe the chain of transformations and predict what values we will deal with.
 
+The `Reversible` class is a container for an iterator that can be iterated in reverse order.
+
 ## 🥁 Installation and usage
 
 Using NPM:
@@ -140,6 +142,27 @@ The interface and logic of `AsyncCollection` are similar to the `Collection` cla
    ```
 
 Other methods work similarly to the methods of the `Collection` class, but synchronously. Functions for working with asynchronous collections are usually named with the postfix `Async`, for example: `mapAsync`, `takeAsync`, `filterAsync`.
+
+### [Reversible](#reversible_collection)
+
+The `Reversible` class is designed to contain an iterator that can be iterated in reverse order. It implements the `Iterable` interface.
+
+It is assumed that an instance of `Reversible` knows how to efficiently iterate over a collection in reverse order, as the developer specifies this behavior during creation.
+
+To achieve this, the class constructor provides two API options:
+
+1. Provide a function that immediately returns a reversed iterator. In this case, the same iterator returned by the provided function will be used.
+2. Provide two functions, where the first returns the length of the collection, and the second defines how to get a value from the collection at a specific index. In this case, a new iterator will be returned, which sequentially calls the `getItem` function for all indices, starting from the value returned by `getLength` down to 0.
+
+#### [Methods](#reversible_methods)
+
+1. The `reverse` method sets the iterator instance to iterate over elements in reverse order. It returns the current `Reversible` instance.
+
+   ```ts
+   reverse(): Reversible<T>;
+   ```
+
+⚠️ The `reverse` modifier function can work with instances of the `Reversible` class. It calls the `reverse` method on the provided object if it is an instance of this class.
 
 ### [Functions](#functions)
 
