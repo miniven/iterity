@@ -4,10 +4,6 @@ const enum Errors {
   METHODS_NOT_PROVIDED = 'No functions for reversal are provided. Provide either "reverse" or "getLength" and "getItem".',
 }
 
-const isReverseFunction = <R, T>(func: Function, argsLength: number): func is (iterable: R) => Iterator<T> => {
-  return typeof func === 'function' && argsLength < 3;
-};
-
 /**
  * Represents a reversible iterable collection
  */
@@ -16,6 +12,13 @@ export class Reversible<T, R extends Iterable<T>> implements Iterable<T> {
   private _reversed = false;
 
   private _getReversedIterator: () => Iterator<T>;
+
+  private static isReverseFunction = <R, T>(
+    func: Function,
+    argsLength: number
+  ): func is (iterable: R) => Iterator<T> => {
+    return typeof func === 'function' && argsLength < 3;
+  };
 
   /**
    * Creates a new `Reversible` instance.
@@ -38,7 +41,7 @@ export class Reversible<T, R extends Iterable<T>> implements Iterable<T> {
     /**
      * If `reverse` function was provided
      */
-    if (isReverseFunction<R, T>(reverseOrGetLength, arguments.length)) {
+    if (Reversible.isReverseFunction<R, T>(reverseOrGetLength, arguments.length)) {
       this._getReversedIterator = reverseOrGetLength.bind(this, this._iterable);
 
       return;
