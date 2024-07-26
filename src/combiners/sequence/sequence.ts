@@ -2,7 +2,7 @@ import {
   createAsyncIterableIterator,
   createIterableIterator,
   createIteratorReturn,
-  getAsyncIterableIterator,
+  toAsyncIterableIterator,
   getIterator,
 } from '../../core';
 
@@ -70,7 +70,7 @@ export function sequenceAsync<T>(
 ): AsyncIterableIterator<T> {
   const iterablesIterator = getIterator(iterables);
 
-  let currentIterator = getAsyncIterableIterator(iterable);
+  let currentIterator = toAsyncIterableIterator(iterable);
 
   return createAsyncIterableIterator(async function () {
     const next = await currentIterator.next();
@@ -91,7 +91,7 @@ export function sequenceAsync<T>(
       /**
        * Иначе начинаем итерацию по следующему вложенному итератору
        */
-      currentIterator = getAsyncIterableIterator(nextIterator.value);
+      currentIterator = toAsyncIterableIterator(nextIterator.value);
 
       return currentIterator.next();
     }

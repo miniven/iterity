@@ -43,7 +43,7 @@ export function reverse<T>(iterable: Iterable<T>): Iterable<T> {
   }
 
   if (isIterableString(iterable)) {
-    return indexedToReversed(iterable);
+    return indexedToReversed<T>(iterable);
   }
 
   const stack: T[] = [];

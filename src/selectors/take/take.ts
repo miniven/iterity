@@ -2,8 +2,8 @@ import {
   createAsyncIterableIterator,
   createIterableIterator,
   createIteratorReturn,
-  getAsyncIterableIterator,
-  getIterableIterator,
+  toAsyncIterableIterator,
+  toIterableIterator,
 } from '../../core/helpers';
 
 /**
@@ -17,7 +17,7 @@ import {
  */
 export function take(limit: number) {
   return <T>(iterable: Iterable<T>): IterableIterator<T> => {
-    const iterator = getIterableIterator(iterable);
+    const iterator = toIterableIterator(iterable);
 
     return createIterableIterator(function () {
       const next = iterator.next();
@@ -44,7 +44,7 @@ export function take(limit: number) {
  */
 export function takeAsync(limit: number) {
   return <T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {
-    const iterator = getAsyncIterableIterator(iterable);
+    const iterator = toAsyncIterableIterator(iterable);
 
     return createAsyncIterableIterator(async function () {
       const next = iterator.next();

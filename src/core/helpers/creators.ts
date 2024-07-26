@@ -23,14 +23,19 @@ export const createIteratorReturn = (): IteratorReturnResult<undefined> => ({
  * Creates new asynchronous iterator with passed function as next method.
  *
  * @param next Async function used as next method
+ * @param [returnMethod] Function used as return method
  * @returns Asyncronous iterator
  */
-export function createAsyncIterableIterator<T>(next: AsyncIterator<T>['next']): AsyncIterableIterator<T> {
+export function createAsyncIterableIterator<T>(
+  next: AsyncIterator<T>['next'],
+  returnMethod?: AsyncIterator<T>['return']
+): AsyncIterableIterator<T> {
   return {
     [Symbol.asyncIterator]() {
       return this;
     },
     next,
+    return: returnMethod,
   };
 }
 
@@ -38,13 +43,18 @@ export function createAsyncIterableIterator<T>(next: AsyncIterator<T>['next']): 
  * Creates new iterator with passed function as next method
  *
  * @param next Function used as next method
+ * @param [returnMethod] Function used as return method
  * @returns Iterator
  */
-export function createIterableIterator<T>(next: Iterator<T>['next']): IterableIterator<T> {
+export function createIterableIterator<T>(
+  next: Iterator<T>['next'],
+  returnMethod?: Iterator<T>['return']
+): IterableIterator<T> {
   return {
     [Symbol.iterator]() {
       return this;
     },
     next,
+    return: returnMethod,
   };
 }

@@ -1,4 +1,4 @@
-import { createAsyncIterableIterator, createIterableIterator, getAsyncIterableIterator, getIterator } from '../../core';
+import { createAsyncIterableIterator, createIterableIterator, toAsyncIterableIterator, getIterator } from '../../core';
 
 /**
  * Creates iterator for elements of the original iterable value,
@@ -43,7 +43,7 @@ export function filter<T>(predicate: (value: T) => boolean) {
  */
 export function filterAsync<T>(predicate: (value: T) => boolean) {
   return function (iterable: AsyncIterable<T>): AsyncIterableIterator<T> {
-    const iterator = getAsyncIterableIterator(iterable);
+    const iterator = toAsyncIterableIterator(iterable);
 
     return createAsyncIterableIterator(async function () {
       let next = await iterator.next();

@@ -1,8 +1,8 @@
 import {
   createAsyncIterableIterator,
   createIterableIterator,
-  getAsyncIterableIterator,
-  getIterableIterator,
+  toAsyncIterableIterator,
+  toIterableIterator,
 } from '../../core';
 
 /**
@@ -17,7 +17,7 @@ import {
  */
 export function tap<T>(effect: (value: T) => void) {
   return (iterable: Iterable<T>): IterableIterator<T> => {
-    const iterator = getIterableIterator(iterable);
+    const iterator = toIterableIterator(iterable);
 
     return createIterableIterator(function () {
       const next = iterator.next();
@@ -43,7 +43,7 @@ export function tap<T>(effect: (value: T) => void) {
  */
 export function tapAsync<T>(effect: (value: T) => void) {
   return (iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {
-    const iterator = getAsyncIterableIterator(iterable);
+    const iterator = toAsyncIterableIterator(iterable);
 
     return createAsyncIterableIterator(async function () {
       const next = await iterator.next();

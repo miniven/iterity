@@ -1,4 +1,4 @@
-import { randomAsyncGenerator } from '../../jest.helpers';
+import { randomAsyncGenerator, countTraversalTime } from '../../jest.helpers';
 import { enumerable } from '../../decorators';
 import { take } from '../../selectors';
 import { Collection } from './Collection';
@@ -297,5 +297,20 @@ describe('core/containers/Collection: toIterable static method', () => {
     expect(iterable).toHaveProperty([Symbol.iterator]);
     expect(iterator.next().value).toBe(asyncIterator);
     expect(iterator.next().done).toBeTruthy();
+  });
+});
+
+describe('core/containers/Collection: traversal is fast enough compared to native api', () => {
+  jest.retryTimes(3);
+
+  const ELEMENTS_COUNT = 1000000;
+
+  test(`traverse ${ELEMENTS_COUNT} elements`, () => {
+    const nativeTime = countTraversalTime(new Array(ELEMENTS_COUNT).fill(1).values());
+    const iterityTime = countTraversalTime(new Collection(new Array(ELEMENTS_COUNT).fill(1).values()));
+
+    console.log(`🤩 NATIVE: ${nativeTime}, 🫣 ITERITY: ${iterityTime}`);
+
+    expect(iterityTime - nativeTime).toBeLessThanOrEqual(5);
   });
 });

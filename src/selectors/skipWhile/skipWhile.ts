@@ -2,8 +2,8 @@ import {
   createAsyncIterableIterator,
   createIterableIterator,
   createIteratorReturn,
-  getAsyncIterableIterator,
-  getIterableIterator,
+  toAsyncIterableIterator,
+  toIterableIterator,
 } from '../../core';
 
 const enum State {
@@ -25,7 +25,7 @@ const enum State {
  */
 export function skipWhile<T>(predicate: (value: T) => boolean) {
   return (iterable: Iterable<T>): IterableIterator<T> => {
-    const iterator = getIterableIterator(iterable);
+    const iterator = toIterableIterator(iterable);
     let state = State.IDLE;
 
     return createIterableIterator(function () {
@@ -60,7 +60,7 @@ export function skipWhile<T>(predicate: (value: T) => boolean) {
  */
 export function skipWhileAsync<T>(predicate: (value: T) => boolean) {
   return (iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {
-    const iterator = getAsyncIterableIterator(iterable);
+    const iterator = toAsyncIterableIterator(iterable);
     let state = State.IDLE;
 
     return createAsyncIterableIterator(async function () {

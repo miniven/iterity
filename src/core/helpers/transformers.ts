@@ -5,7 +5,6 @@ import {
   createIterableIterator,
   createIteratorReturn,
   createIteratorYield,
-  getIterableIterator,
   isAsyncIterable,
 } from '.';
 
@@ -71,7 +70,7 @@ export function toAsyncIterableValue<T>(value: T): AsyncIterableIterator<T> {
  * @returns {AsyncIterableIterator} Asynchronous iterable iterator
  */
 export function iterableToAsyncIterable<T>(iterable: Iterable<T>): AsyncIterableIterator<T> {
-  const iterator = getIterableIterator(iterable);
+  const iterator = toIterableIterator(iterable);
 
   return createAsyncIterableIterator(async function () {
     const next = iterator.next();
@@ -130,8 +129,32 @@ export function toSameContainer<T>(value: T): T {
  * @param {Iterable} iterable Iterable value
  * @returns {IterableIterator} iterable iterator with "return" method implementation
  */
-export function* toDisposable<T>(iterable: Iterable<T>): IterableIterator<T> {
-  yield* iterable;
+export function toDisposable<T>(iterable: Iterable<T>): IterableIterator<T> {
+  const iterator = iterable[Symbol.iterator]();
+
+  let state = State.IDLE;
+
+  return {
+    [Symbol.iterator]() {
+      return this;
+    },
+    next() {
+      if (state === State.DONE) {
+        return typeof iterator.return !== 'function'
+          ? createIteratorReturn()
+          : iterator.return();
+      }
+
+      return iterator.next();
+    },
+    return() {
+      state = State.DONE;
+
+      return typeof iterator.return !== 'function'
+        ? createIteratorReturn()
+        : iterator.return();
+    },
+  };
 }
 
 /**
@@ -161,4 +184,42 @@ export function from<T>(value: T | Iterable<T> | AsyncIterable<T>): Collection<T
   }
 
   return new Collection(value);
+}
+
+/**
+ * Extracts passed value iterator and returns new iterable iterator
+ *
+ * @param value Iterable value
+ * @returns Iterable iterator for passed value
+ */
+export function toIterableIterator<T>(value: Iterable<T>): IterableIterator<T> {
+  const iterator = value[Symbol.iterator]();
+
+  return {
+    [Symbol.iterator]() {
+      return this;
+    },
+    next() {
+      return iterator.next();
+    },
+  };
+}
+
+/**
+ * Extracts passed value asynchronous iterator and returns new asynchronous iterable iterator
+ *
+ * @param value Asynchronous iterable value
+ * @returns Asynchronous iterable iterator for passed value
+ */
+export function toAsyncIterableIterator<T>(value: AsyncIterable<T>): AsyncIterableIterator<T> {
+  const iterator = value[Symbol.asyncIterator]();
+
+  return {
+    [Symbol.asyncIterator]() {
+      return this;
+    },
+    next() {
+      return iterator.next();
+    },
+  };
 }

@@ -2,8 +2,8 @@ import {
   createAsyncIterableIterator,
   createIterableIterator,
   createIteratorReturn,
-  getAsyncIterableIterator,
-  getIterableIterator,
+  toAsyncIterableIterator,
+  toIterableIterator,
 } from '../../core';
 
 /**
@@ -18,7 +18,7 @@ import {
  */
 export function slice(from: number, to: number) {
   return <T>(iterable: Iterable<T>): IterableIterator<T> => {
-    const iterator = getIterableIterator(iterable);
+    const iterator = toIterableIterator(iterable);
     let pointer = 0;
 
     return createIterableIterator(function () {
@@ -52,7 +52,7 @@ export function slice(from: number, to: number) {
  */
 export function sliceAsync(from: number, to: number) {
   return <T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {
-    const iterator = getAsyncIterableIterator(iterable);
+    const iterator = toAsyncIterableIterator(iterable);
     let pointer = 0;
 
     return createAsyncIterableIterator(async function () {

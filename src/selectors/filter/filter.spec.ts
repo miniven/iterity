@@ -1,4 +1,4 @@
-import { createAsyncGenerator, lensToYieldDone, lensToYieldValue } from '../../jest.helpers';
+import { checkNativeMethod, countTraversalTime, createAsyncGenerator, lensToYieldDone, lensToYieldValue } from '../../jest.helpers';
 import { filter, filterAsync } from './filter';
 
 describe('selectors/filter', () => {
@@ -29,4 +29,28 @@ describe('selectors/filter', () => {
 
     expect(moreThanThreeEmptyIterator.next().then(lensToYieldDone)).resolves.toBeTruthy();
   });
+
+  test(
+    `filter is fast enough compared to native filter method`,
+    checkNativeMethod(
+      'filter',
+      () => {
+        const ELEMENTS_COUNT = 1000000;
+
+        function isOddNumber(num: number) {
+          return num % 2 !== 0;
+        }
+
+        const nativeCollection = new Array(ELEMENTS_COUNT).fill(1).values().filter!(isOddNumber);
+        const iterityCollection = filter(isOddNumber)(new Array(ELEMENTS_COUNT).fill(1).values());
+
+        const nativeTime = countTraversalTime(nativeCollection);
+        const iterityTime = countTraversalTime(iterityCollection);
+
+        console.log(`🤩 NATIVE: ${nativeTime}, 🫣 ITERITY: ${iterityTime}`);
+
+        expect(iterityTime - nativeTime).toBeLessThan(5);
+      }
+    )
+  );
 });

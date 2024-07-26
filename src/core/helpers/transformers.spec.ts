@@ -5,7 +5,9 @@ import {
   from,
   iterableToAsyncIterable,
   toAsyncCollection,
+  toAsyncIterableIterator,
   toAsyncIterableValue,
+  toIterableIterator,
   toIterableValue,
   toSameContainer,
 } from './transformers';
@@ -100,5 +102,22 @@ describe('core/helpers/transformers', () => {
 
     expect(collection).toHaveProperty([Symbol.asyncIterator]);
     expect(collection).toBeInstanceOf(AsyncCollection);
+  });
+
+  test('toIterableIterator returns new iterable iterator', () => {
+    const collection = [1, 2, 3];
+    const iterator = toIterableIterator(collection);
+
+    expect(iterator).toHaveProperty([Symbol.iterator]);
+    expect(iterator).toHaveProperty('next');
+    expect(iterator[Symbol.iterator]()).toBe(iterator);
+  });
+
+  test('toAsyncIterableIterator returns new async iterable iterator', () => {
+    const iterator = toAsyncIterableIterator(randomAsyncGenerator());
+
+    expect(iterator).toHaveProperty([Symbol.asyncIterator]);
+    expect(iterator).toHaveProperty('next');
+    expect(iterator[Symbol.asyncIterator]()).toBe(iterator);
   });
 });

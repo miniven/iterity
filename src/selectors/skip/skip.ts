@@ -2,8 +2,8 @@ import {
   createAsyncIterableIterator,
   createIterableIterator,
   createIteratorReturn,
-  getAsyncIterableIterator,
-  getIterableIterator,
+  toAsyncIterableIterator,
+  toIterableIterator,
 } from '../../core';
 
 /**
@@ -17,7 +17,7 @@ import {
  */
 export function skip(amount: number) {
   return <T>(iterable: Iterable<T>): IterableIterator<T> => {
-    const iterator = getIterableIterator(iterable);
+    const iterator = toIterableIterator(iterable);
 
     return createIterableIterator(function () {
       let next = iterator.next();
@@ -47,7 +47,7 @@ export function skip(amount: number) {
  */
 export function skipAsync(amount: number) {
   return <T>(iterable: AsyncIterable<T>): AsyncIterableIterator<T> => {
-    const iterator = getAsyncIterableIterator(iterable);
+    const iterator = toAsyncIterableIterator(iterable);
 
     return createAsyncIterableIterator(async function () {
       let next = await iterator.next();

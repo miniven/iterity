@@ -3,8 +3,8 @@ import {
   createIterableIterator,
   createIteratorReturn,
   createIteratorYield,
-  getAsyncIterableIterator,
-  getIterableIterator,
+  toAsyncIterableIterator,
+  toIterableIterator,
 } from '../../core';
 
 const enum State {
@@ -22,7 +22,7 @@ const enum State {
  * @returns Asynchronous iterable iterator
  */
 export function enumerableAsync<T>(iterable: AsyncIterable<T>): AsyncIterableIterator<[number, T]> {
-  const iterator = getAsyncIterableIterator(iterable);
+  const iterator = toAsyncIterableIterator(iterable);
 
   let index = 0;
   let state = State.IDLE;
@@ -50,7 +50,7 @@ export function enumerableAsync<T>(iterable: AsyncIterable<T>): AsyncIterableIte
  * @returns Iterable iterator
  */
 export function enumerable<T>(iterable: Iterable<T>): IterableIterator<[number, T]> {
-  const iterator = getIterableIterator(iterable);
+  const iterator = toIterableIterator(iterable);
 
   let index = 0;
   let state = State.IDLE;

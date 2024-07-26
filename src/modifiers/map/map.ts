@@ -2,8 +2,8 @@ import {
   createAsyncIterableIterator,
   createIterableIterator,
   createIteratorYield,
-  getAsyncIterableIterator,
-  getIterableIterator,
+  toAsyncIterableIterator,
+  toIterableIterator,
 } from '../../core';
 
 /**
@@ -17,7 +17,7 @@ import {
  */
 export function map<T, R>(mapper: (value: T, iterable: Iterable<T>) => R) {
   return function (iterable: Iterable<T>): IterableIterator<R> {
-    const iterator = getIterableIterator(iterable);
+    const iterator = toIterableIterator(iterable);
 
     return createIterableIterator(function () {
       const next = iterator.next();
@@ -43,7 +43,7 @@ export function map<T, R>(mapper: (value: T, iterable: Iterable<T>) => R) {
  */
 export function mapAsync<T, R>(mapper: (value: T, iterable: AsyncIterable<T>) => R) {
   return function (iterable: AsyncIterable<T>): AsyncIterableIterator<R> {
-    const iterator = getAsyncIterableIterator(iterable);
+    const iterator = toAsyncIterableIterator(iterable);
 
     return createAsyncIterableIterator(async function () {
       const next = await iterator.next();
